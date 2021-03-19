@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Chatzap</title>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.3/socket.io.js"></script>
+	<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+	<form action="post" id="chat">
+		<input type="text" name="username" placeholder="Digite seu nome">
+		<div class="messages"></div>
+		<input type="text" name="message" placeholder="Digite sua mensagem">
+		<button type="submit">Enviar</button>
+	</form>
+
+	<script type="text/javascript">
+		//	Function to render a message
+		function renderMessage(message) {
+			const child = `<div class='message'><strong>${message.author}</strong>: ${message.message}</div>`;
+			$(".messages").append(child);
+		}
+
+		//	Connecting to server
+		const socket = io(window.location.origin);
+
+		//	Render all previous messages
+		socket.on("previousMessages", (messages) => messages.map((message) => renderMessage(message)));
+
+		//	Render received message
+		socket.on("receivedMessage", (message) => renderMessage(message));
+
+		//	Send message on submit
+		$("#chat").submit((event) => {
+			event.preventDefault();
+
+			const author = $("input[name=username]").val();
+			const message = $("input[name=message]").val();
+
+			if(author && author.length && message && message) {
+				const messageObj = {
+					author,
+					message
+				};
+
+				renderMessage(messageObj);
+
+				socket.emit("sendMessage", messageObj);
+			}
+		});
+	</script>
+</body>
+</html>

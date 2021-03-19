@@ -1,0 +1,22 @@
+{
+  "name": "chatzap",
+  "version": "1.0.0",
+  "description": "System to chat with strangers",
+  "main": "src/index.ts",
+  "repository": "https://github.com/ThiagoPereiraUFV/Chatzap.git",
+  "author": "Thiago Marinho Pereira",
+  "license": "MIT",
+  "scripts": {
+    "start": "ts-node --transpile-only ./src/index.ts"
+  },
+  "dependencies": {
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "socket.io": "^4.0.0",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.3"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.11"
+  }
+}
