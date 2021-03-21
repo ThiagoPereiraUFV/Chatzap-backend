@@ -13,12 +13,14 @@ export function websocket(app: express.Application) {
 
 	//	User connection events
 	io.on("connection", (socket: Socket) => {
-		//	User joining room
-		socket.on("join", ({ name, room }, callback) => {
-			const { error, user } = UserController.create(socket.id, name, room);
+		//	User joining group
+		socket.on("joinGroup", ({ name, number, group }, callback) => {
+			const { error, errors, user } = UserController.create(socket.id, name, number, group);
 
 			if(error) {
 				callback(error);
+			} else if(errors) {
+				callback(errors);
 			} else {
 				//	Send welcome message to user
 				socket.emit("message", {
@@ -36,7 +38,30 @@ export function websocket(app: express.Application) {
 				socket.join(user?.room ?? "");
 
 				//	Send room data to user room
-				io.to(user?.room).emit("roomData", {
+				io.to(user?.room).emit("groupData", {
+					room: user?.room,
+					users: UserController.allOnRoom(user?.room ?? "")
+				});
+
+				callback();
+			}
+		});
+
+		//	User joining direct
+		socket.on("joinDirect", ({ name, number, numberDirect }, callback) => {
+			const room = (number > numberDirect) ? number + numberDirect : numberDirect + number;
+			const { error, errors, user } = UserController.create(socket.id, name, number, room);
+
+			if(error) {
+				callback(error);
+			} else if(errors) {
+				callback(errors);
+			} else {
+				//	Set user room
+				socket.join(user?.room ?? "");
+
+				//	Send room data to user room
+				io.to(user?.room).emit("groupData", {
 					room: user?.room,
 					users: UserController.allOnRoom(user?.room ?? "")
 				});
@@ -59,7 +84,7 @@ export function websocket(app: express.Application) {
 				});
 
 				//	Send room data to user room
-				io.to(user?.room).emit("roomData", {
+				io.to(user?.room).emit("groupData", {
 					room: user?.room,
 					users: UserController.allOnRoom(user?.room ?? "")
 				});
@@ -68,15 +93,32 @@ export function websocket(app: express.Application) {
 			}
 		});
 
-		//	User disconnecting from room
-		socket.on("disconnect", () => {
-			const { user } = UserController.delete(socket.id);
+		//	User disconnecting from group
+		socket.on("leaveGroup", (callback) => {
+			const { error, user } = UserController.delete(socket.id);
 
-			//	Send user disconnecting message to all room users
-			socket.broadcast.to(user?.room).emit("message", {
-				user: "admin",
-				text: `${user?.name} saiu da sala!`
-			});
+			if(error) {
+				callback(error);
+			} else {
+				//	Send user disconnecting message to all room users
+				socket.broadcast.to(user?.room).emit("message", {
+					user: "admin",
+					text: `${user?.name} saiu da sala!`
+				});
+
+				callback();
+			}
+		});
+
+		//	User disconnecting from direct
+		socket.on("leaveDirect", (callback) => {
+			const { error, user } = UserController.delete(socket.id);
+
+			if(error) {
+				callback(error);
+			} else {
+				callback();
+			}
 		});
 	});
 
