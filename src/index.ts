@@ -1,4 +1,4 @@
-//	Importing server resources
+//	Importing app resources
 import app from "./app";
 
 //	Defining port
