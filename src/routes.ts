@@ -1,4 +1,4 @@
-//	Importing express and multer resources
+//	Importing express resources
 import Router, { Request, Response } from "express";
 
 //  Setting up routes

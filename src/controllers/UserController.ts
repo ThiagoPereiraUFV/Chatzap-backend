@@ -1,6 +1,7 @@
 const users: any[] = [];
 
 class UserController {
+	//	Get user by id
 	get(id: string) {
 		const index = users.findIndex((user) => user.id === id);
 
@@ -11,6 +12,7 @@ class UserController {
 		}
 	}
 
+	//	Create user given id, name and room
 	create(id: string, name: string, room: string) {
 		name = name.trim().toLowerCase();
 		room = room.trim().toLowerCase();
@@ -32,6 +34,7 @@ class UserController {
 		}
 	}
 
+	//	Delete user given id
 	delete(id: string) {
 		const index = users.findIndex((user) => user.id === id);
 
@@ -42,9 +45,11 @@ class UserController {
 		}
 	}
 
+	//	Return all room users
 	allOnRoom(room: string) {
 		return users.filter((user) => user.room === room);
 	}
 }
 
+//	Exporting User controller
 export default new UserController();
