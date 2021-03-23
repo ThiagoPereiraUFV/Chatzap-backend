@@ -26,7 +26,7 @@ export function websocket(app: express.Application) {
 				socket.emit("message", {
 					user: "group",
 					number: "",
-					text: `Olá ${user?.name}! Este é o grupo o ${user?.room}`
+					text: `Olá ${user?.name}! Você está grupo ${user?.room}`
 				});
 
 				//	Send user joining message to all room users
