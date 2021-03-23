@@ -1,4 +1,4 @@
-const users: any[] = [];
+import UsersRepository from "../repositories/UsersRepository";
 
 class UserController {
 	//	Get user by id
@@ -6,12 +6,12 @@ class UserController {
 		if(!id || !id.length) {
 			return { error: "Id inválido!" };
 		} else {
-			const index = users.findIndex((user) => user.id === id);
+			const user = UsersRepository.findById(id);
 
-			if(index !== -1) {
-				return { user: users[index] };
+			if(user) {
+				return { user };
 			} else {
-				return { error: "User doesn't exist!" };
+				return { error: "Usuário não existe!" };
 			}
 		}
 	}
@@ -47,7 +47,7 @@ class UserController {
 		if(errors.length) {
 			return { errors };
 		} else {
-			const existingUser = users.find((user) => user.room === room && user.number === number);
+			const existingUser = UsersRepository.findByNumberRoom(number, room);
 
 			if(existingUser) {
 				return { error: "Número não disponível!" };
@@ -59,7 +59,7 @@ class UserController {
 					room
 				};
 
-				users.push(user);
+				UsersRepository.create(user);
 
 				return { user };
 			}
@@ -71,10 +71,10 @@ class UserController {
 		if(!id || !id.length) {
 			return { error: "Id inválido!" };
 		} else {
-			const index = users.findIndex((user) => user.id === id);
+			const user = UsersRepository.deleteById(id);
 
-			if(index !== -1) {
-				return { user: users.splice(index, 1)[0] };
+			if(user) {
+				return { user };
 			} else {
 				return { error: "Usuário não existe!" };
 			}
@@ -86,7 +86,7 @@ class UserController {
 		if(!room || !room.length) {
 			return { error: "Nome da sala inválido!" };
 		} else {
-			return users.filter((user) => user.room === room);
+			return UsersRepository.allonRoom(room);
 		}
 	}
 }

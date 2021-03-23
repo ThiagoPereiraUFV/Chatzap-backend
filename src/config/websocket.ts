@@ -99,7 +99,7 @@ export function websocket(app: express.Application) {
 
 			//	Send user disconnecting message to all room users
 			if(!user?.room.includes(user?.number)) {
-				socket.broadcast.to(user?.room).emit("message", {
+				socket.broadcast.to(user?.room ?? "").emit("message", {
 					user: "group",
 					text: `${user?.name} saiu da sala!`
 				});
