@@ -22,22 +22,15 @@ export function websocket(app: express.Application) {
 			} else if(errors) {
 				callback(errors);
 			} else {
-				//	Send welcome message to user
-				socket.emit("message", {
+				//	Set user room
+				socket.join(user?.room ?? "");
+
+				//	Send user joining message to all room users
+				io.to(user?.room).emit("message", {
 					user: "group",
 					number: "",
 					text: `${user?.name} entrou no grupo`
 				});
-
-				//	Send user joining message to all room users
-				socket.broadcast.to(user?.room ?? "").emit("message", {
-					user: "group",
-					number: "",
-					text: `${user?.name}, entrou na sala!`
-				});
-
-				//	Set user room
-				socket.join(user?.room ?? "");
 
 				//	Send room data to user room
 				io.to(user?.room).emit("groupData", {
