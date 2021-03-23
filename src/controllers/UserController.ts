@@ -4,7 +4,7 @@ class UserController {
 	//	Get user by id
 	get(id: string) {
 		if(!id || !id.length) {
-			return { error: "Invalid id!" };
+			return { error: "Id inválido!" };
 		} else {
 			const index = users.findIndex((user) => user.id === id);
 
@@ -21,25 +21,25 @@ class UserController {
 		const errors: string[] = [];
 
 		if(!id || !id.length) {
-			errors.push("Invalid id!");
+			errors.push("Id inválido!");
 		} else {
 			id = id.trim();
 		}
 
 		if(!name || !name.length) {
-			errors.push("Invalid name!");
+			errors.push("Nome inválido!");
 		} else {
 			name = name.trim();
 		}
 
 		if(!number || !number.length) {
-			errors.push("Invalid number!");
+			errors.push("Número inválido!");
 		} else {
 			number = number.trim();
 		}
 
 		if(!room || !room.length) {
-			errors.push("Invalid room!");
+			errors.push("Sala inválida!");
 		} else {
 			room = room.trim();
 		}
@@ -47,10 +47,10 @@ class UserController {
 		if(errors.length) {
 			return { errors };
 		} else {
-			const existingUser = users.find((user) => user.room === room && user.name === name);
+			const existingUser = users.find((user) => user.room === room && user.number === number);
 
 			if(existingUser) {
-				return { error: "Username is not available!" };
+				return { error: "Número não disponível!" };
 			} else {
 				const user = {
 					id,
@@ -69,14 +69,14 @@ class UserController {
 	//	Delete user given id
 	delete(id: string) {
 		if(!id || !id.length) {
-			return { error: "Invalid id!" };
+			return { error: "Id inválido!" };
 		} else {
 			const index = users.findIndex((user) => user.id === id);
 
 			if(index !== -1) {
 				return { user: users.splice(index, 1)[0] };
 			} else {
-				return { error: "User doesn't exist!" };
+				return { error: "Usuário não existe!" };
 			}
 		}
 	}
@@ -84,7 +84,7 @@ class UserController {
 	//	Return all room users
 	allOnRoom(room: string) {
 		if(!room || !room.length) {
-			return { error: "Invalid room name!" };
+			return { error: "Nome da sala inválido!" };
 		} else {
 			return users.filter((user) => user.room === room);
 		}

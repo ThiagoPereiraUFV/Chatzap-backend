@@ -1,0 +1,44 @@
+import { users } from "../models/User";
+import { User } from "../models/interfaces/User";
+
+class UsersRepository {
+	public findById(id: string) {
+		const index = users.findIndex((user) => user.id === id);
+
+		return (index !== -1) ? users[index] : null;
+	}
+
+	public findByNumber(number: string) {
+		const index = users.findIndex((user) => user.number === number);
+
+		return (index !== -1) ? users[index] : null;
+	}
+
+	public findByNumberRoom(number: string, room: string) {
+		const index = users.findIndex((user) => user.room === room && user.number === number);
+
+		return (index !== -1) ? users[index] : null;
+	}
+
+	public create(user: User) {
+		users.push(user);
+
+		return user;
+	}
+
+	public delete(id: string) {
+		const index = users.findIndex((user) => user.id === id);
+
+		return (index !== -1) ? users.splice(index, 1)[0] : null;
+	}
+
+	public allonRoom(room: string) {
+		return users.filter((user) => user.room === room);
+	}
+
+	public all() {
+		return users;
+	}
+}
+
+export default new UsersRepository();

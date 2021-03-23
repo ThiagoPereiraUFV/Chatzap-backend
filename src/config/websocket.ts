@@ -24,13 +24,13 @@ export function websocket(app: express.Application) {
 			} else {
 				//	Send welcome message to user
 				socket.emit("message", {
-					user: "admin",
-					text: `Hey ${user?.name}! Bem vindo(a) à sala ${user?.room}`
+					user: "group",
+					text: `Olá ${user?.name}! Este é o grupo o ${user?.room}`
 				});
 
 				//	Send user joining message to all room users
 				socket.broadcast.to(user?.room ?? "").emit("message", {
-					user: "admin",
+					user: "group",
 					text: `${user?.name}, entrou na sala!`
 				});
 
@@ -79,7 +79,7 @@ export function websocket(app: express.Application) {
 			} else {
 				//	Send user message to user room
 				io.to(user?.room).emit("message", {
-					user: user.name,
+					user: user?.name,
 					text: message
 				});
 
@@ -94,30 +94,15 @@ export function websocket(app: express.Application) {
 		});
 
 		//	User disconnecting from group
-		socket.on("leaveGroup", (callback) => {
+		socket.on("disconnect", () => {
 			const { error, user } = UserController.delete(socket.id);
 
-			if(error) {
-				callback(error);
-			} else {
-				//	Send user disconnecting message to all room users
+			//	Send user disconnecting message to all room users
+			if(!user?.room.includes(user?.number)) {
 				socket.broadcast.to(user?.room).emit("message", {
-					user: "admin",
+					user: "group",
 					text: `${user?.name} saiu da sala!`
 				});
-
-				callback();
-			}
-		});
-
-		//	User disconnecting from direct
-		socket.on("leaveDirect", (callback) => {
-			const { error, user } = UserController.delete(socket.id);
-
-			if(error) {
-				callback(error);
-			} else {
-				callback();
 			}
 		});
 	});
