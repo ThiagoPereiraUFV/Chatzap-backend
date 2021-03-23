@@ -25,12 +25,14 @@ export function websocket(app: express.Application) {
 				//	Send welcome message to user
 				socket.emit("message", {
 					user: "group",
+					number: "",
 					text: `Olá ${user?.name}! Este é o grupo o ${user?.room}`
 				});
 
 				//	Send user joining message to all room users
 				socket.broadcast.to(user?.room ?? "").emit("message", {
 					user: "group",
+					number: "",
 					text: `${user?.name}, entrou na sala!`
 				});
 
@@ -80,6 +82,7 @@ export function websocket(app: express.Application) {
 				//	Send user message to user room
 				io.to(user?.room).emit("message", {
 					user: user?.name,
+					number: user?.number,
 					text: message
 				});
 
@@ -101,6 +104,7 @@ export function websocket(app: express.Application) {
 			if(!user?.room.includes(user?.number)) {
 				socket.broadcast.to(user?.room ?? "").emit("message", {
 					user: "group",
+					number: "",
 					text: `${user?.name} saiu da sala!`
 				});
 			}
