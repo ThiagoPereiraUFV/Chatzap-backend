@@ -15,12 +15,6 @@ class UsersRepository {
 		return (index !== -1) ? users[index] : null;
 	}
 
-	public findByNumberRoom(number: string, room: string) {
-		const index = users.findIndex((user) => user.room === room && user.number === number);
-
-		return (index !== -1) ? users[index] : null;
-	}
-
 	public create(user: object) {
 		users.push(<User>user);
 
@@ -31,10 +25,6 @@ class UsersRepository {
 		const index = users.findIndex((user) => user.id === id);
 
 		return (index !== -1) ? users.splice(index, 1)[0] : null;
-	}
-
-	public allonRoom(room: string) {
-		return users.filter((user) => user.room === room);
 	}
 
 	public all() {
