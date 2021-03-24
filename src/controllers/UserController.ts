@@ -1,8 +1,9 @@
+//	Importing Users repository
 import UsersRepository from "../repositories/UsersRepository";
 
 class UserController {
 	//	Get user by id
-	get(id: string) {
+	getById(id: string) {
 		if(!id || !id.length) {
 			return { error: "Id inválido!" };
 		} else {
@@ -16,14 +17,27 @@ class UserController {
 		}
 	}
 
-	//	Create user given id, name number and room
-	create(id: string, name: string, number: string, room: string) {
+	//	Get user by id
+	getByNumber(number: string) {
+		if(!number || !number.length) {
+			return { error: "Número inválido!" };
+		} else {
+			const user = UsersRepository.findByNumber(number);
+
+			if(user) {
+				return { user };
+			} else {
+				return { error: "Usuário não existe!" };
+			}
+		}
+	}
+
+	//	Create user given id, name and number
+	create(id: string, name: string, number: string) {
 		const errors: string[] = [];
 
 		if(!id || !id.length) {
 			errors.push("Id inválido!");
-		} else {
-			id = id.trim();
 		}
 
 		if(!name || !name.length) {
@@ -38,16 +52,10 @@ class UserController {
 			number = number.trim();
 		}
 
-		if(!room || !room.length) {
-			errors.push("Sala inválida!");
-		} else {
-			room = room.trim();
-		}
-
 		if(errors.length) {
 			return { errors };
 		} else {
-			const existingUser = UsersRepository.findByNumberRoom(number, room);
+			const existingUser = UsersRepository.findByNumber(number);
 
 			if(existingUser) {
 				return { error: "Número não disponível!" };
@@ -56,7 +64,7 @@ class UserController {
 					id,
 					name,
 					number,
-					room
+					online: false
 				};
 
 				UsersRepository.create(user);
@@ -82,12 +90,12 @@ class UserController {
 	}
 
 	//	Return all room users
-	allOnRoom(room: string) {
+	allUserRooms(room: string) {/*
 		if(!room || !room.length) {
 			return { error: "Nome da sala inválido!" };
 		} else {
 			return UsersRepository.allonRoom(room);
-		}
+		}*/
 	}
 }
 
