@@ -3,7 +3,7 @@ export interface User {
 	id: string,
 	name: string,
 	number: string,
-	room: string,
+	online: boolean,
 	image?: string,
 	createdAt: Date,
 	updatedAt: Date
