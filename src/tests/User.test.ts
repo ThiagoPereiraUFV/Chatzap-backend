@@ -9,7 +9,7 @@ const fileTest = ["./src/tests/files/test1.png", "./src/tests/files/test2.json"]
 //	Test variables
 var userToken = ["", ""];
 const username = [Math.random().toString(36).substr(2, 9), Math.random().toString(36).substr(2, 9)];
-const phone = [Math.floor(Math.random()*(10**11)), Math.floor(Math.random()*(10**11))];
+const phone = [Math.floor(Math.random()*(10**11)).toString(), Math.floor(Math.random()*(10**11)).toString()];
 
 describe("User", () => {
 	afterAll(async () => {

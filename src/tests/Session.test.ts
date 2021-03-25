@@ -6,7 +6,7 @@ import app from "../app";
 //	Test variables
 var userToken = "";
 const username = Math.random().toString(36).substr(2, 9);
-const phone = Math.floor(Math.random()*(10**11));
+const phone = Math.floor(Math.random()*(10**11)).toString();
 
 describe("Session", () => {
 	afterAll(async () => {
