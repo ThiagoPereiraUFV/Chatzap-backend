@@ -28,6 +28,7 @@ class App {
 
 	//	Implementing routes
 	private routes(): void {
+		this.express.use(express.json());
 		this.express.use("/files", express.static(path.resolve(__dirname, "..", "public", "users")));
 		this.express.use(routes);
 	}
