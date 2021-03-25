@@ -1,9 +1,10 @@
-//	Importing express, cors, http, websocket and routes resources
+//	Importing express, cors, http, websocket, routes and database resources
 import express from "express";
 import http from "http";
 import cors from "cors";
 import { websocket } from "./config/websocket";
 import { routes } from "./routes";
+import db from "./config/database";
 
 class App {
 	public express: express.Application;
@@ -13,6 +14,7 @@ class App {
 		this.express = express();
 		this.server = new http.Server();
 
+		this.database();
 		this.middlewares();
 		this.routes();
 		this.websocket();
@@ -26,6 +28,11 @@ class App {
 	//	Implementing routes
 	private routes(): void {
 		this.express.use(routes);
+	}
+
+	//	Connect to database
+	private database(): void {
+		db.connect();
 	}
 
 	//	Setting up websocket server
