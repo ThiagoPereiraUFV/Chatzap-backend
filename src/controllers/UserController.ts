@@ -3,8 +3,7 @@ import { Request, Response } from "express";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 
-//	Importing Users and Contacts repositories
-import ContactsRepository from "../repositories/ContactsRepository";
+//	Importing Users repository
 import UsersRepository from "../repositories/UsersRepository";
 
 //	Importing helpers
@@ -143,23 +142,19 @@ class UserController {
 		});
 	}
 
-	//	Remove user and its contacts
+	//	Remove user
 	async delete(req: Request, res: Response) {
 		const { authorization: userId, password } = req.headers;
 
 		await UsersRepository.findById(<string>userId).then((user) => {
 			if(user) {
 				if(user.comparePassword(<string>password)) {
-					ContactsRepository.allFromUser(user._id).then((response) => {
-						user.remove().then(() => {
-							if(user.image && user.image.length) {
-								deleteFile(userUploads(user.image));
-							}
+					user.remove().then(() => {
+						if(user.image && user.image.length) {
+							deleteFile(userUploads(user.image));
+						}
 
-							return res.status(200).send("The user and all his contacts have been deleted!");
-						}).catch((error) => {
-							return res.status(500).send(error);
-						});
+						return res.status(200).send("The user has been deleted!");
 					}).catch((error) => {
 						return res.status(500).send(error);
 					});

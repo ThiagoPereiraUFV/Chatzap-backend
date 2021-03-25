@@ -4,7 +4,6 @@ import Router, { Request, Response } from "express";
 //	Importing route controllers
 import SessionController from "./controllers/SessionController";
 import UserController from "./controllers/UserController";
-import ContactController from "./controllers/ContactController";
 
 //	Importing helpers and settings
 import valid from "./helpers/validation";
@@ -30,14 +29,6 @@ routes.put("/user", auth.verify, valid.updateUser, UserController.update);
 routes.put("/userImage", userUpload, auth.verify, valid.updateUserImage, UserController.updateImage);
 routes.delete("/user", auth.verify, valid.deleteUser, UserController.delete);
 routes.get("/allUsers", UserController.all);
-
-//	Contact
-routes.get("/contact", auth.verify, ContactController.index);
-routes.post("/contact", auth.verify, valid.createContact, ContactController.create);
-routes.put("/contact/:id", auth.verify, valid.updateContact, ContactController.update);
-routes.delete("/contact/:id", auth.verify, valid.deleteContact, ContactController.delete);
-routes.get("/allContacts", ContactController.all);
-routes.get("/searchContact", auth.verify, valid.searchContact, ContactController.search);
 
 //	Not found page
 routes.get("*", (req: Request, res: Response) => {

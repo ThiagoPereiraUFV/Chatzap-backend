@@ -28,7 +28,6 @@ class App {
 
 	//	Implementing routes
 	private routes(): void {
-		this.express.use("/files", express.static(path.resolve(__dirname, "..", "public", "contacts")));
 		this.express.use("/files", express.static(path.resolve(__dirname, "..", "public", "users")));
 		this.express.use(routes);
 	}

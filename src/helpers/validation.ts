@@ -2,9 +2,6 @@
 import { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
 
-//	Importing Users and Contacts schemas and collections from database
-import UsersRepository from "../repositories/UsersRepository";
-
 //	Importing helpers
 import { deleteFile } from "../helpers/deleteFile";
 import { userUploads } from "../helpers/paths";
@@ -122,97 +119,6 @@ export default {
 
 		if(!password || !password.length) {
 			errors.push("Invalid password!");
-		}
-
-		if(errors.length) {
-			return res.status(400).json({ errors: errors });
-		} else {
-			return next();
-		}
-	},
-	async createContact(req: Request, res: Response, next: NextFunction) {
-		const userId = req.headers.authorization;
-		const { name, phone } = req.body;
-		const errors: string[] = [];
-
-		if(!userId || !userId.length || !mongoose.isValidObjectId(userId)) {
-			errors.push("Invalid id!");
-		} else if(!(await UsersRepository.findById(userId))) {
-			errors.push("User not found!");
-		}
-
-		if(!name || !name.length) {
-			errors.push("Invalid name!");
-		}
-
-		if(!phone || !phone.length) {
-			errors.push("Invalid phone!");
-		}
-
-		if(errors.length) {
-			return res.status(400).json({ errors: errors });
-		} else {
-			return next();
-		}
-	},
-	async updateContact(req: Request, res: Response, next: NextFunction) {
-		const userId = req.headers.authorization;
-		const contactId = req.params.id;
-		const { name, phone } = req.body;
-		const errors: string[] = [];
-
-		if(!userId || !userId.length || !mongoose.isValidObjectId(userId)) {
-			errors.push("Invalid id!");
-		}
-
-		if(!contactId || !contactId.length || !mongoose.isValidObjectId(contactId)) {
-			errors.push("Invalid id!");
-		}
-
-		if(!name || !name.length ) {
-			errors.push("Invalid name!");
-		}
-
-		if(!phone || !phone.length) {
-			errors.push("Invalid phone!");
-		}
-
-		if(errors.length) {
-			return res.status(400).json({ errors: errors });
-		} else {
-			return next();
-		}
-	},
-	async deleteContact(req: Request, res: Response, next: NextFunction) {
-		const userId = req.headers.authorization;
-		const contactId = req.params.id;
-		const errors: string[] = [];
-
-		if(!userId || !userId.length || !mongoose.isValidObjectId(userId)) {
-			errors.push("Invalid id!");
-		}
-
-		if(!contactId || !contactId.length || !mongoose.isValidObjectId(contactId)) {
-			errors.push("Invalid id!");
-		}
-
-		if(errors.length) {
-			return res.status(400).json({ errors: errors });
-		} else {
-			return next();
-		}
-	},
-	async searchContact(req: Request, res: Response, next: NextFunction) {
-		const userId = req.headers.authorization;
-		const query = req.query.q;
-		const errors: string[] = [];
-
-		if(!userId || !userId.length || !mongoose.isValidObjectId(userId)) {
-			errors.push("Invalid id!");
-		}
-
-		if(!query || !query.length) {
-			errors.push("Invalid search!");
 		}
 
 		if(errors.length) {
