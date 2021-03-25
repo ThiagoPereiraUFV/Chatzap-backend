@@ -9,6 +9,7 @@ const fileTest = ["./src/tests/files/test1.png", "./src/tests/files/test2.json"]
 //	Test variables
 var userToken = ["", ""];
 const username = [Math.random().toString(36).substr(2, 9), Math.random().toString(36).substr(2, 9)];
+const phone = [Math.floor(Math.random()*(10**11)), Math.floor(Math.random()*(10**11))];
 
 describe("User", () => {
 	afterAll(async () => {
@@ -20,6 +21,7 @@ describe("User", () => {
 	test("Should be able to create a user", async () => {
 		await request(app).post("/user").send({
 			name: "User Example",
+			phone: phone[0],
 			email: username[0] + "@example.com",
 			password: "password",
 			passwordC: "password"
@@ -35,15 +37,17 @@ describe("User", () => {
 	test("Should be able to create another user", async () => {
 		await request(app).post("/user").send({
 			name: "User Example 2",
+			phone: phone[1],
 			email: username[1] + "@example.com",
 			password: "password",
 			passwordC: "password"
 		}).expect(201).then((response) => userToken[1] = response.body.token);
 	});
 
-	test("Should not be able to create a new user using existent email", async () => {
+	test("Should not be able to create a new user using existent phone", async () => {
 		await request(app).post("/user").send({
 			name: "User Example",
+			phone: phone[0],
 			email: username[0] + "@example.com",
 			password: "password",
 			passwordC: "password"
@@ -54,11 +58,12 @@ describe("User", () => {
 		await request(app).get("/allUsers").expect(200);
 	});
 
-	test("Should be able to update name and password of the first created user", async () => {
+	test("Should be able to update name, email and password of the first created user", async () => {
 		await request(app).put("/user").set({
 			"x-access-token": userToken[0]
 		}).send({
 			name: "User Updated Example",
+			phone: phone[0],
 			email: username[0] + ".updated@example.com",
 			passwordO: "password",
 			passwordN: "password1"
@@ -79,12 +84,12 @@ describe("User", () => {
 		}).expect(400);
 	});
 
-	test("Should not be able to update email of the first created user using an existing email", async () => {
+	test("Should not be able to update phone of the first created user using an existing phone", async () => {
 		await request(app).put("/user").set({
 			"x-access-token": userToken[0]
 		}).send({
 			name: "User",
-			email: username[1] + "@example.com"
+			phone: phone[1],
 		}).expect(400);
 	});
 
