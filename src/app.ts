@@ -1,7 +1,8 @@
-//	Importing express, cors, http, websocket, routes and database resources
+//	Importing express, http, cors, path, websocket, routes and database resources
 import express from "express";
 import http from "http";
 import cors from "cors";
+import path from "path";
 import { websocket } from "./config/websocket";
 import { routes } from "./routes";
 import db from "./config/database";
@@ -27,6 +28,8 @@ class App {
 
 	//	Implementing routes
 	private routes(): void {
+		this.express.use("/files", express.static(path.resolve(__dirname, "..", "public", "contacts")));
+		this.express.use("/files", express.static(path.resolve(__dirname, "..", "public", "users")));
 		this.express.use(routes);
 	}
 

@@ -15,6 +15,12 @@ const UserSchema = new Schema<User>({
 		trim: true,
 		required: true
 	},
+	email: {
+		type: String,
+		trim: true,
+		lowercase: true,
+		required: false
+	},
 	password: {
 		type: String,
 		set: (p: String) => bcrypt.hashSync(p, bcrypt.genSaltSync(10)),
