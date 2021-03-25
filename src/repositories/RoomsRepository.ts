@@ -1,28 +1,39 @@
-//	Importing rooms data structure and Room interfaces
-import { rooms } from "../models/Room";
-import { Room } from "../models/interfaces/Room";
+import rooms from "../models/Room";
 
 class RoomsRepository {
-	public findById(id: string) {
-		const index = rooms.findIndex((room) => room.id === id);
-
-		return (index !== -1) ? rooms[index] : null;
+	public async create(room: object) {
+		return await rooms.create(room);
 	}
 
-	public create(room: object) {
-		rooms.push(<Room>room);
-
-		return room;
+	public async findById(id: string) {
+		return await rooms.findById(id);
 	}
 
-	public deleteById(id: string) {
-		const index = rooms.findIndex((room) => room.id === id);
-
-		return (index !== -1) ? rooms.splice(index, 1)[0] : null;
+	public async findByName(name: string) {
+		return await rooms.find({ name });
 	}
 
-	public all() {
-		return rooms;
+	public async all() {
+		return await rooms.find().sort({
+			name: "asc",
+			creationDate: "desc"
+		});
+	}
+
+	public async find(query: string) {
+		return await rooms.find({
+			$or: [
+				{
+					name: {
+						$regex: ".*" + query + ".*",
+						$options: "i"
+					}
+				}
+			]
+		}).sort({
+			name: "asc",
+			creationDate: "desc"
+		});
 	}
 }
 

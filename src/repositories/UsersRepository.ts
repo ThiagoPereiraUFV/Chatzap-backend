@@ -1,34 +1,23 @@
-//	Importing users data structure and User interfaces
-import { users } from "../models/User";
-import { User } from "../models/interfaces/User";
+import users from "../models/User";
 
 class UsersRepository {
-	public findById(id: string) {
-		const index = users.findIndex((user) => user.id === id);
-
-		return (index !== -1) ? users[index] : null;
+	public async findById(id: string) {
+		return await users.findById(id);
 	}
 
-	public findByNumber(number: string) {
-		const index = users.findIndex((user) => user.number === number);
-
-		return (index !== -1) ? users[index] : null;
+	public async findByPhone(phone: string) {
+		return await users.findOne({ phone: phone.trim() });
 	}
 
-	public create(user: object) {
-		users.push(<User>user);
-
-		return user;
+	public async create(user: object) {
+		return await users.create(user);
 	}
 
-	public deleteById(id: string) {
-		const index = users.findIndex((user) => user.id === id);
-
-		return (index !== -1) ? users.splice(index, 1)[0] : null;
-	}
-
-	public all() {
-		return users;
+	public async all() {
+		return await users.find().sort({
+			name: "asc",
+			creationDate: "desc"
+		});
 	}
 }
 

@@ -1,40 +1,26 @@
-//	Importing usersRooms data structure and UserRoom interfaces
-import { usersRooms } from "../models/UserRoom";
-import { UserRoom } from "../models/interfaces/UserRoom";
+import usersRooms from "../models/UserRoom";
 
 class UsersRoomsRepository {
-	public findByIdUserRoom(idUser: string, idRoom: string) {
-		const index = usersRooms.findIndex((userRoom) => userRoom.idUser === idUser && userRoom.idRoom === idRoom);
-
-		return (index !== -1) ? usersRooms[index] : null;
+	public async findById(id: string) {
+		return await usersRooms.findById(id);
 	}
 
-	public findByIdUser(idUser: string) {
-		const index = usersRooms.findIndex((userRoom) => userRoom.idUser === idUser);
-
-		return (index !== -1) ? usersRooms[index] : null;
+	public async findByUserId(userId: string) {
+		return await usersRooms.find({ userId }).populate("roomId");
 	}
 
-	public findByIdRoom(idRoom: string) {
-		const index = usersRooms.findIndex((userRoom) => userRoom.idRoom === idRoom);
-
-		return (index !== -1) ? usersRooms[index] : null;
+	public async findByRoomId(roomId: string) {
+		return await usersRooms.find({ roomId }).populate("userId");
 	}
 
-	public create(userRoom: object) {
-		usersRooms.push(<UserRoom>userRoom);
-
-		return userRoom;
+	public async create(userRoom: object) {
+		return await usersRooms.create(userRoom);
 	}
 
-	public deleteByIdUserRoom(idUser: string, idRoom: string) {
-		const index = usersRooms.findIndex((userRoom) => userRoom.idUser === idUser && userRoom.idRoom === idRoom);
-
-		return (index !== -1) ? usersRooms.splice(index, 1)[0] : null;
-	}
-
-	public all() {
-		return usersRooms;
+	public async all() {
+		return await usersRooms.find().sort({
+			creationDate: "desc"
+		});
 	}
 }
 
