@@ -1,10 +1,13 @@
+//  Importing mongoose resources
+import { Document } from "mongoose";
+
 //	Defining User interface
-export interface User {
-	id: string,
+export interface User extends Document {
 	name: string,
-	number: string,
-	online: boolean,
+	phone: string,
+	password: string,
 	image?: string,
 	createdAt: Date,
-	updatedAt: Date
+	updatedAt: Date,
+	comparePassword(password: string): boolean
 };
