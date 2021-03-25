@@ -12,7 +12,7 @@ export function websocket(app: express.Application) {
 	const io = require("socket.io")(server);
 
 	//	User connection events
-	io.on("connection", (socket: Socket) => {
+	io.on("connection", (socket: Socket) => {/*
 		//	User joining group
 		socket.on("joinGroup", ({ name, number, group }, callback) => {
 			const { error, errors, user } = UserController.create(socket.id, name, number, group);
@@ -101,7 +101,7 @@ export function websocket(app: express.Application) {
 					text: `${user?.name} saiu do grupo!`
 				});
 			}
-		});
+		});*/
 	});
 
 	return server;

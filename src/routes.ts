@@ -2,7 +2,14 @@
 import Router, { Request, Response } from "express";
 
 //	Importing route controllers
-import UsersRepository from "./repositories/UsersRepository";
+import SessionController from "./controllers/SessionController";
+import UserController from "./controllers/UserController";
+import ContactController from "./controllers/ContactController";
+
+//	Importing helpers and settings
+import valid from "./helpers/validation";
+import auth from "./helpers/authentication";
+import { userUpload } from "./config/uploads";
 
 //  Setting up routes
 const routes = Router();
@@ -12,14 +19,25 @@ routes.get("/", (req: Request, res: Response) => {
 	return res.status(200).send("Chatzap Backend");
 });
 
-//	Return if user exists
-routes.get("/user/:number", (req: Request, res: Response) => {
-	const { number } = req.params;
+//	Session
+routes.get("/session", auth.verify, SessionController.index);
+routes.post("/session", valid.createSession, SessionController.create);
 
-	const user = UsersRepository.findByNumber(number);
+//	User
+routes.get("/user", auth.verify, UserController.index);
+routes.post("/user", valid.createUser, UserController.create);
+routes.put("/user", auth.verify, valid.updateUser, UserController.update);
+routes.put("/userImage", userUpload, auth.verify, valid.updateUserImage, UserController.updateImage);
+routes.delete("/user", auth.verify, valid.deleteUser, UserController.delete);
+routes.get("/allUsers", UserController.all);
 
-	return res.status(200).json({ exists: (user) ? true : false });
-});
+//	Contact
+routes.get("/contact", auth.verify, ContactController.index);
+routes.post("/contact", auth.verify, valid.createContact, ContactController.create);
+routes.put("/contact/:id", auth.verify, valid.updateContact, ContactController.update);
+routes.delete("/contact/:id", auth.verify, valid.deleteContact, ContactController.delete);
+routes.get("/allContacts", ContactController.all);
+routes.get("/searchContact", auth.verify, valid.searchContact, ContactController.search);
 
 //	Not found page
 routes.get("*", (req: Request, res: Response) => {
