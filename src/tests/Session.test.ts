@@ -6,6 +6,7 @@ import app from "../app";
 //	Test variables
 var userToken = "";
 const username = Math.random().toString(36).substr(2, 9);
+const phone = Math.floor(Math.random()*(10**11));
 
 describe("Session", () => {
 	afterAll(async () => {
@@ -17,6 +18,7 @@ describe("Session", () => {
 	test("Should be able to create a user", async () => {
 		return await request(app).post("/user").send({
 			name: "User Session Example",
+			phone: phone,
 			email: username + ".session@example.com",
 			password: "password",
 			passwordC: "password"
@@ -25,7 +27,7 @@ describe("Session", () => {
 
 	test("Should be able to create a session", async () => {
 		await request(app).post("/session").send({
-			email: username + ".session@example.com",
+			phone: phone,
 			password: "password"
 		}).set({
 			"x-access-token": userToken
