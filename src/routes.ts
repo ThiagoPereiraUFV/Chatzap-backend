@@ -4,11 +4,12 @@ import Router, { Request, Response } from "express";
 //	Importing route controllers
 import SessionController from "./controllers/SessionController";
 import UserController from "./controllers/UserController";
+import RoomController from "./controllers/RoomController";
 
 //	Importing helpers and settings
 import valid from "./helpers/validation";
 import auth from "./helpers/authentication";
-import { userUpload } from "./config/uploads";
+import { userUpload, roomUpload } from "./config/uploads";
 
 //  Setting up routes
 const routes = Router();
@@ -29,6 +30,15 @@ routes.put("/user", auth.verify, valid.updateUser, UserController.update);
 routes.put("/userImage", userUpload, auth.verify, valid.updateUserImage, UserController.updateImage);
 routes.delete("/user", auth.verify, valid.deleteUser, UserController.delete);
 routes.get("/allUsers", UserController.all);
+
+//	Room
+routes.get("/contact", auth.verify, RoomController.index);
+routes.post("/contact", auth.verify, valid.createRoom, RoomController.create);
+routes.put("/contact/:id", auth.verify, valid.updateRoom, RoomController.update);
+routes.put("/contactImage/:id", roomUpload, auth.verify, valid.updateRoomImage, RoomController.updateImage);
+routes.delete("/contact/:id", auth.verify, valid.deleteRoom, RoomController.delete);
+routes.get("/allRooms", RoomController.all);
+routes.get("/searchRoom", auth.verify, valid.searchRoom, RoomController.search);
 
 //	Not found page
 routes.get("*", (req: Request, res: Response) => {
