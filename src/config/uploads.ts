@@ -12,3 +12,14 @@ export const userUpload = multer({
 		}
 	})
 }).single("image");
+
+export const roomUpload = multer({
+	storage: multer.diskStorage({
+		destination: path.resolve(__dirname, "..", "..", "public", "rooms"),
+		filename: (req, file, cb) => {
+			const ext = path.extname(file.originalname);
+
+			cb(null, `room-${Date.now()}${ext}`);
+		}
+	})
+}).single("image");

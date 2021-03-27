@@ -1,81 +1,149 @@
+//  Importing express, mongoose and JWT resources
+import { Request, Response } from "express";
+import mongoose from "mongoose";
+
 //	Importing Rooms repository
 import RoomsRepository from "../repositories/RoomsRepository";
 
+//	Importing helpers
+import { deleteFile } from "../helpers/deleteFile";
+import { roomUploads } from "../helpers/paths";
+
+//	Room features
 class RoomController {
-	//	Get room by id
-	get(id: string) {
-		if(!id || !id.length) {
-			return { error: "Id inválido!" };
-		} else {
-			const room = RoomsRepository.findById(id);
+	//	Return an room on database given id
+	async index(req: Request, res: Response) {
+		const roomId = req.headers.authorization;
 
+		if(!roomId || !roomId.length || !mongoose.isValidObjectId(roomId)) {
+			return res.status(400).send("Invalid id!");
+		}
+
+		await RoomsRepository.findById(roomId).then((room) => {
 			if(room) {
-				return { room };
+				return res.status(200).json(room);
 			} else {
-				return { error: "Sala não existe!" };
+				return res.status(404).send("Room not found!");
 			}
-		}
+		}).catch((error) => {
+			return res.status(500).send(error);
+		});
 	}
 
-	//	Create room given id and name
-	create(id: string, name: string) {
-		const errors: string[] = [];
+	//	Create a new room
+	async create(req: Request, res: Response) {
+		const { name } = req.body;
 
-		if(!id || !id.length) {
-			errors.push("Id inválido!");
-		}
-
-		if(!name || !name.length) {
-			errors.push("Nome inválido!");
-		} else {
-			name = name.trim();
-		}
-
-		if(errors.length) {
-			return { errors };
-		} else {
-			const existingRoom = RoomsRepository.findById(id);
-
-			if(existingRoom) {
-				return { error: "Sala não disponível!" };
-			} else {
-				const room = {
-					id,
-					name,
-					nMembers: 0
-				};
-
-				RoomsRepository.create(room);
-
-				return { room };
-			}
-		}
-	}
-
-	//	Delete room given id
-	delete(id: string) {
-		if(!id || !id.length) {
-			return { error: "Id inválido!" };
-		} else {
-			const room = RoomsRepository.deleteById(id);
-
+		RoomsRepository.create({
+			name: name.trim()
+		}).then((room) => {
 			if(room) {
-				return { room };
+				return res.status(201).json(room);
 			} else {
-				return { error: "Sala não existe!" };
+				return res.status(400).send("We couldn't process your request, try again later!");
 			}
-		}
+		}).catch((error) => {
+			return res.status(500).send(error);
+		});
 	}
 
-	//	Return all room users
-	allOnRoom(room: string) {/*
-		if(!room || !room.length) {
-			return { error: "Nome da sala inválido!" };
-		} else {
-			return RoomsRepository.allonRoom(room);
-		}*/
+	//	Update room
+	async update(req: Request, res: Response) {
+		const roomId = req.headers.authorization;
+		const { name } = req.body;
+
+		RoomsRepository.findById(<string>roomId).then((room) => {
+			if(room) {
+				room.name = name.trim();
+
+				room.save().then((response) => {
+					if(response) {
+						return res.status(200).send("Successful on updating data!");
+					} else {
+						return res.status(400).send("We couldn't save your changes, try again later!");
+					}
+				}).catch((error) => {
+					return res.status(500).send(error);
+				});
+			} else {
+				return res.status(404).send("Room not found!");
+			}
+		}).catch((error) => {
+			return res.status(500).send(error);
+		});
 	}
-}
+
+	//	Update room image
+	async updateImage(req: Request, res: Response) {
+		const roomId = req.headers.authorization;
+		const filename = req.file.filename;
+
+		await RoomsRepository.findById(<string>roomId).then((room) => {
+			if(room) {
+				const deleteImage = room.image;
+				room.image = filename;
+
+				room.save().then((response) => {
+					if(response) {
+						if(deleteImage && deleteImage.length) {
+							deleteFile(roomUploads(deleteImage));
+						}
+
+						return res.status(200).json(response);
+					} else {
+						deleteFile(roomUploads(filename));
+
+						return res.status(400).send("Image could not be updated");
+					}
+				});
+			} else {
+				deleteFile(roomUploads(filename));
+
+				return res.status(404).send("Room not found!");
+			}
+		}).catch((error) => {
+			deleteFile(roomUploads(filename));
+
+			return res.status(500).send(error);
+		});
+	}
+
+	//	Remove room
+	async delete(req: Request, res: Response) {
+		const { authorization: roomId, password } = req.headers;
+
+		await RoomsRepository.findById(<string>roomId).then((room) => {
+			if(room) {
+				room.remove().then(() => {
+					if(room.image && room.image.length) {
+						deleteFile(roomUploads(room.image));
+					}
+
+					return res.status(200).send("The room has been deleted!");
+				}).catch((error) => {
+					return res.status(500).send(error);
+				});
+			} else {
+				return res.status(404).send("Room not found!");
+			}
+		}).catch((error) => {
+			return res.status(500).send(error);
+		});
+	}
+
+	//	Return all rooms
+	async all(req: Request, res: Response) {
+		await RoomsRepository.all().then((response) => {
+			if(response) {
+				return res.status(200).json(response);
+			} else {
+				return res.status(404).send("Rooms not found!");
+			}
+		}).catch((error) => {
+			return res.status(500).send(error);
+		});
+	}
+};
 
 //	Exporting Room controller
 export default new RoomController();

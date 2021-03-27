@@ -1,4 +1,4 @@
-//  Importing express, mongoose, JWT and bcryptjs resources
+//  Importing express, mongoose and JWT resources
 import { Request, Response } from "express";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
