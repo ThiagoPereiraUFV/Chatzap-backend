@@ -27,8 +27,9 @@ class RoomsRepository {
 		});
 	}
 
-	public async find(query: string | undefined) {
+	public async find(userId: string | undefined, query: string | undefined) {
 		return await rooms.find({
+			userId,
 			$or: [
 				{
 					name: {

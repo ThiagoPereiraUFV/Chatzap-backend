@@ -50,32 +50,31 @@ describe("Room", () => {
 	});
 
 	test("Should be able to get all database rooms", async () => {
-		await request(app).get("/allContacts").expect(200);
+		await request(app).get("/allRooms").expect(200);
 	});
 
 	test("Should be able to get two rooms named Room Example", async () => {
-		await request(app).get("/searchContact?q=Room Example").set({
+		await request(app).get("/searchRoom?q=Room Example").set({
 			"x-access-token": userToken
 		}).expect(200).then((response) => expect(response.body.length).toBe(2));
 	});
 
 	test("Should be able to get zero rooms named Maria", async () => {
-		await request(app).get("/searchContact?q=Maria").set({
+		await request(app).get("/searchRoom?q=Maria").set({
 			"x-access-token": userToken
 		}).expect(200).then((response) => expect(response.body.length).toBe(0));
 	});
 
-	test("Should be able to update name and email of the first created room", async () => {
+	test("Should be able to update name of the first created room", async () => {
 		await request(app).put("/room/" + roomId[0]).send({
-			name: "Room Updated Example",
-			email: "room.updated@example.com"
+			name: "Room Updated Example"
 		}).set({
 			"x-access-token": userToken
 		}).expect(200);
 	});
 
 	test("Should be able to update image of the first created room", async () => {
-		await request(app).put("/contactImage/" + roomId[0]).attach("image", fileTest[0]).set({
+		await request(app).put("/roomImage/" + roomId[0]).attach("image", fileTest[0]).set({
 			"x-access-token": userToken
 		}).expect(200).then((response) => {
 			return request(app).get("/files/" + response.body.image).expect(200);
@@ -83,7 +82,7 @@ describe("Room", () => {
 	});
 
 	test("Should not be able to update image of the first created room", async () => {
-		await request(app).put("/contactImage/" + roomId[0]).attach("image", fileTest[1]).set({
+		await request(app).put("/roomImage/" + roomId[0]).attach("image", fileTest[1]).set({
 			"x-access-token": userToken
 		}).expect(400);
 	});
@@ -94,10 +93,9 @@ describe("Room", () => {
 		}).expect(200);
 	});
 
-	test("Should not be able to update name and email of the first created room", async () => {
+	test("Should not be able to update name of the first created room", async () => {
 		await request(app).put("/room/" + roomId[0]).send({
-			name: "Room Updated Example",
-			email: "room.updated@example.com"
+			name: "Room Updated Example"
 		}).set({
 			"x-access-token": userToken
 		}).expect(404);

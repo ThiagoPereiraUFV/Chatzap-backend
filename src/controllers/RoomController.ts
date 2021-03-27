@@ -124,6 +124,22 @@ class RoomController {
 		});
 	}
 
+	//	Return a list of rooms containing a specific word
+	async search(req: Request, res: Response) {
+		const userId = req.headers.authorization;
+		const query = req.query.q;
+
+		await RoomsRepository.find(userId, <string>query).then((response) => {
+			if(response) {
+				return res.status(200).json(response);
+			} else {
+				return res.status(404).send("Rooms not found!");
+			}
+		}).catch((error) => {
+			return res.status(500).send(error);
+		});
+	}
+
 	//	Return all rooms
 	async all(req: Request, res: Response) {
 		await RoomsRepository.all().then((response) => {
