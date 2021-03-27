@@ -32,11 +32,11 @@ routes.delete("/user", auth.verify, valid.deleteUser, UserController.delete);
 routes.get("/allUsers", UserController.all);
 
 //	Room
-routes.get("/contact", auth.verify, RoomController.index);
-routes.post("/contact", auth.verify, valid.createRoom, RoomController.create);
-routes.put("/contact/:id", auth.verify, valid.updateRoom, RoomController.update);
-routes.put("/contactImage/:id", roomUpload, auth.verify, valid.updateRoomImage, RoomController.updateImage);
-routes.delete("/contact/:id", auth.verify, valid.deleteRoom, RoomController.delete);
+routes.get("/room", auth.verify, RoomController.index);
+routes.post("/room", auth.verify, valid.createRoom, RoomController.create);
+routes.put("/room/:id", auth.verify, valid.updateRoom, RoomController.update);
+routes.put("/roomImage/:id", roomUpload, auth.verify, valid.updateRoomImage, RoomController.updateImage);
+routes.delete("/room/:id", auth.verify, valid.deleteRoom, RoomController.delete);
 routes.get("/allRooms", RoomController.all);
 routes.get("/searchRoom", auth.verify, valid.searchRoom, RoomController.search);
 

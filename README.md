@@ -7,11 +7,11 @@
 </h4>
 
 <p align="center">
-<img alt="GitHub language count" src="https://img.shields.io/github/languages/count/ThiagoPereiraUFV/EasyContacts-backend">
+<img alt="GitHub language count" src="https://img.shields.io/github/languages/count/ThiagoPereiraUFV/Chatzap-backend">
 
-<img alt="Repository size" src="https://img.shields.io/github/repo-size/ThiagoPereiraUFV/EasyContacts-backend">
+<img alt="Repository size" src="https://img.shields.io/github/repo-size/ThiagoPereiraUFV/Chatzap-backend">
 
-<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/ThiagoPereiraUFV/EasyContacts-backend">
+<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/ThiagoPereiraUFV/Chatzap-backend">
 
 <img alt="License" src="https://img.shields.io/badge/license-MIT-brightgreen">
 </p>
