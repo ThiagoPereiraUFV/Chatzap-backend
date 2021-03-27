@@ -1,12 +1,12 @@
 import users from "../models/User";
 
 class UsersRepository {
-	public async findById(id: string) {
+	public async findById(id: string | undefined) {
 		return await users.findById(id);
 	}
 
-	public async findByPhone(phone: string) {
-		return await users.findOne({ phone: phone.trim() });
+	public async findByPhone(phone: string | undefined) {
+		return await users.findOne({ phone: (<string>phone).trim() });
 	}
 
 	public async create(user: object) {

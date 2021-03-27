@@ -72,7 +72,7 @@ class UserController {
 			if(response && (response._id != userId)) {
 				return res.status(400).send("This phone isn't available, try another!");
 			} else {
-				UsersRepository.findById(<string>userId).then((user) => {
+				UsersRepository.findById(userId).then((user) => {
 					if(user) {
 						user.name = name.trim();
 						user.phone = phone.trim();
@@ -112,7 +112,7 @@ class UserController {
 		const userId = req.headers.authorization;
 		const filename = req.file.filename;
 
-		await UsersRepository.findById(<string>userId).then((user) => {
+		await UsersRepository.findById(userId).then((user) => {
 			if(user) {
 				const deleteImage = user.image;
 				user.image = filename;
@@ -146,7 +146,7 @@ class UserController {
 	async delete(req: Request, res: Response) {
 		const { authorization: userId, password } = req.headers;
 
-		await UsersRepository.findById(<string>userId).then((user) => {
+		await UsersRepository.findById(userId).then((user) => {
 			if(user) {
 				if(user.comparePassword(<string>password)) {
 					user.remove().then(() => {
