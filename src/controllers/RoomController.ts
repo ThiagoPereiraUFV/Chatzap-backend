@@ -11,19 +11,19 @@ import { roomUploads } from "../helpers/paths";
 
 //	Room features
 class RoomController {
-	//	Return an room on database given id
+	//	Return user rooms
 	async index(req: Request, res: Response) {
-		const roomId = req.headers.authorization;
+		const userId = req.headers.authorization;
 
-		if(!roomId || !roomId.length || !mongoose.isValidObjectId(roomId)) {
+		if(!userId || !userId.length || !mongoose.isValidObjectId(userId)) {
 			return res.status(400).send("Invalid id!");
 		}
 
-		await RoomsRepository.findById(roomId).then((room) => {
-			if(room) {
-				return res.status(200).json(room);
+		await RoomsRepository.allFromUser(userId).then((response) => {
+			if(response) {
+				return res.status(200).json(response);
 			} else {
-				return res.status(404).send("Room not found!");
+				return res.status(404).send("Rooms not found!");
 			}
 		}).catch((error) => {
 			return res.status(500).send(error);
@@ -32,9 +32,11 @@ class RoomController {
 
 	//	Create a new room
 	async create(req: Request, res: Response) {
+		const userId = req.headers.authorization;
 		const { name } = req.body;
 
 		RoomsRepository.create({
+			userId,
 			name: name.trim()
 		}).then((room) => {
 			if(room) {
@@ -49,22 +51,15 @@ class RoomController {
 
 	//	Update room
 	async update(req: Request, res: Response) {
+		const userId = req.headers.authorization;
 		const roomId = req.headers.authorization;
 		const { name } = req.body;
 
-		RoomsRepository.findById(<string>roomId).then((room) => {
-			if(room) {
-				room.name = name.trim();
-
-				room.save().then((response) => {
-					if(response) {
-						return res.status(200).send("Successful on updating data!");
-					} else {
-						return res.status(400).send("We couldn't save your changes, try again later!");
-					}
-				}).catch((error) => {
-					return res.status(500).send(error);
-				});
+		RoomsRepository.update(roomId, userId, {
+			name: name.trim()
+		}).then((response) => {
+			if(response) {
+				return res.status(200).send("Room data has been updated!");
 			} else {
 				return res.status(404).send("Room not found!");
 			}
@@ -75,10 +70,11 @@ class RoomController {
 
 	//	Update room image
 	async updateImage(req: Request, res: Response) {
-		const roomId = req.headers.authorization;
+		const userId = req.headers.authorization;
+		const roomId = req.params.id;
 		const filename = req.file.filename;
 
-		await RoomsRepository.findById(<string>roomId).then((room) => {
+		await RoomsRepository.findById(roomId, userId).then((room) => {
 			if(room) {
 				const deleteImage = room.image;
 				room.image = filename;
@@ -110,19 +106,16 @@ class RoomController {
 
 	//	Remove room
 	async delete(req: Request, res: Response) {
-		const { authorization: roomId, password } = req.headers;
+		const userId = req.headers.authorization;
+		const roomId = req.params.id;
 
-		await RoomsRepository.findById(<string>roomId).then((room) => {
+		await RoomsRepository.delete(roomId, userId).then((room) => {
 			if(room) {
-				room.remove().then(() => {
-					if(room.image && room.image.length) {
-						deleteFile(roomUploads(room.image));
-					}
+				if(room.image && room.image.length) {
+					deleteFile(roomUploads(room.image));
+				}
 
-					return res.status(200).send("The room has been deleted!");
-				}).catch((error) => {
-					return res.status(500).send(error);
-				});
+				return res.status(200).send("The room has been deleted!");
 			} else {
 				return res.status(404).send("Room not found!");
 			}

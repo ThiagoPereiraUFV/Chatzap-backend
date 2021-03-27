@@ -5,12 +5,19 @@ class RoomsRepository {
 		return await rooms.create(room);
 	}
 
-	public async findById(id: string) {
-		return await rooms.findById(id);
+	public async findById(_id: string | undefined, userId: string | undefined) {
+		return await rooms.findOne({ _id, userId });
 	}
 
-	public async findByName(name: string) {
+	public async findByName(name: string | undefined) {
 		return await rooms.find({ name });
+	}
+
+	public async allFromUser(userId: string | undefined) {
+		return await rooms.find({ userId }).sort({
+			name: "asc",
+			creationDate: "desc"
+		});
 	}
 
 	public async all() {
@@ -20,7 +27,7 @@ class RoomsRepository {
 		});
 	}
 
-	public async find(query: string) {
+	public async find(query: string | undefined) {
 		return await rooms.find({
 			$or: [
 				{
@@ -34,6 +41,14 @@ class RoomsRepository {
 			name: "asc",
 			creationDate: "desc"
 		});
+	}
+
+	public async update(_id: string | undefined, userId: string | undefined, room: object) {
+		return await rooms.findOneAndUpdate({ _id, userId }, room);
+	}
+
+	public async delete(_id: string | undefined, userId: string | undefined) {
+		return await rooms.findOneAndDelete({ _id, userId });
 	}
 }
 
