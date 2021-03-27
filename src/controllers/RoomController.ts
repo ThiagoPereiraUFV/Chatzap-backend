@@ -52,7 +52,7 @@ class RoomController {
 	//	Update room
 	async update(req: Request, res: Response) {
 		const userId = req.headers.authorization;
-		const roomId = req.headers.authorization;
+		const roomId = req.params.id;
 		const { name } = req.body;
 
 		RoomsRepository.update(roomId, userId, {
