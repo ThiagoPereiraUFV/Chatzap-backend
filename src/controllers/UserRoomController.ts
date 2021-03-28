@@ -61,7 +61,26 @@ class UserRoomController {
 		});
 	}
 
-	//	Return all user rooms relationships
+	//	Return all room users
+	async allRoomUsers(req: Request, res: Response) {
+		const roomId = req.headers.authorization;
+
+		if(!roomId || !roomId.length || !mongoose.isValidObjectId(roomId)) {
+			return res.status(400).send("Invalid id!");
+		}
+
+		await UsersRoomsRepository.findByRoomId(roomId).then((response) => {
+			if(response) {
+				return res.status(200).json(response);
+			} else {
+				return res.status(404).send("User rooms not found!");
+			}
+		}).catch((error) => {
+			return res.status(500).send(error);
+		});
+	}
+
+	//	Return all user room relationships
 	async all(req: Request, res: Response) {
 		await UsersRoomsRepository.all().then((response) => {
 			if(response) {
