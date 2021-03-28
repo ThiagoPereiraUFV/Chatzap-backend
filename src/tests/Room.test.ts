@@ -107,16 +107,16 @@ describe("Room", () => {
 		}).expect(404);
 	});
 
+	test("Should be able to delete second created room", async () => {
+		await request(app).delete("/room/" + roomId[1]).set({
+			"x-access-token": userToken
+		}).expect(200);
+	});
+
 	test("Should be able to delete user", async () => {
 		await request(app).delete("/user").set({
 			"x-access-token": userToken,
 			password: "password"
 		}).expect(200);
-	});
-
-	test("Should not be able to get second created room", async () => {
-		await request(app).get("/room/" + roomId[1]).set({
-			"x-access-token": userToken
-		}).expect(404);
 	});
 });

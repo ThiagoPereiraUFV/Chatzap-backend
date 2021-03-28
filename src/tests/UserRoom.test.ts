@@ -75,25 +75,25 @@ describe("User Room", () => {
 	});
 
 	test("Should be able to delete first user room relationship", async () => {
-		await request(app).delete("/userRoom/" + userRoomId[0]).set({
+		await request(app).delete("/userRoom/" + roomId[0]).set({
 			"x-access-token": userToken[0]
 		}).expect(200);
 	});
 
 	test("Should be able to delete second user room relationship", async () => {
-		await request(app).delete("/userRoom/" + userRoomId[1]).set({
+		await request(app).delete("/userRoom/" + roomId[1]).set({
 			"x-access-token": userToken[1]
 		}).expect(200);
 	});
 
 	test("Should be able to delete first user room relationship", async () => {
-		await request(app).delete("/userRoom/" + userRoomId[2]).set({
+		await request(app).delete("/userRoom/" + roomId[1]).set({
 			"x-access-token": userToken[0]
 		}).expect(200);
 	});
 
 	test("Should be able to delete second user room relationship", async () => {
-		await request(app).delete("/userRoom/" + userRoomId[3]).set({
+		await request(app).delete("/userRoom/" + roomId[0]).set({
 			"x-access-token": userToken[1]
 		}).expect(200);
 	});
