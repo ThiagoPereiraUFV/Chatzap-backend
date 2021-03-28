@@ -50,7 +50,7 @@ class UserRoomController {
 		const userId = req.headers.authorization;
 		const roomId = req.params.id;
 
-		await UsersRoomsRepository.delete(roomId, userId).then((userRoom) => {
+		await UsersRoomsRepository.delete(userId, roomId).then((userRoom) => {
 			if(userRoom) {
 				return res.status(200).send("The user room has been deleted!");
 			} else {
