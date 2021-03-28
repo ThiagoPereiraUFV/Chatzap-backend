@@ -63,7 +63,7 @@ class UserRoomController {
 
 	//	Return all room users
 	async allRoomUsers(req: Request, res: Response) {
-		const roomId = req.headers.authorization;
+		const roomId = req.params.id;
 
 		if(!roomId || !roomId.length || !mongoose.isValidObjectId(roomId)) {
 			return res.status(400).send("Invalid id!");

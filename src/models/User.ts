@@ -1,6 +1,7 @@
 //  Importing mongoose, intefaces and bcrypt resources
 import { Schema, model } from "mongoose";
 import { User } from "./interfaces/User";
+import { UserRoom } from "./interfaces/UserRoom";
 import bcrypt from "bcrypt";
 
 //	Defining User schema
