@@ -247,5 +247,43 @@ export default {
 		} else {
 			return next();
 		}
+	},
+	async createUserRoom(req: Request, res: Response, next: NextFunction) {
+		const userId = req.headers.authorization;
+		const roomId = req.params.id;
+		const errors: string[] = [];
+
+		if(!userId || !userId.length || !mongoose.isValidObjectId(userId)) {
+			errors.push("Invalid id!");
+		}
+
+		if(!roomId || !roomId.length || !mongoose.isValidObjectId(roomId)) {
+			errors.push("Invalid id!");
+		}
+
+		if(errors.length) {
+			return res.status(400).json({ errors: errors });
+		} else {
+			return next();
+		}
+	},
+	async deleteUserRoom(req: Request, res: Response, next: NextFunction) {
+		const userId = req.headers.authorization;
+		const roomId = req.params.id;
+		const errors: string[] = [];
+
+		if(!userId || !userId.length || !mongoose.isValidObjectId(userId)) {
+			errors.push("Invalid id!");
+		}
+
+		if(!roomId || !roomId.length || !mongoose.isValidObjectId(roomId)) {
+			errors.push("Invalid id!");
+		}
+
+		if(errors.length) {
+			return res.status(400).json({ errors: errors });
+		} else {
+			return next();
+		}
 	}
 };

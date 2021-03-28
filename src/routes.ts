@@ -5,6 +5,7 @@ import Router, { Request, Response } from "express";
 import SessionController from "./controllers/SessionController";
 import UserController from "./controllers/UserController";
 import RoomController from "./controllers/RoomController";
+import UserRoomController from "./controllers/UserRoomController";
 
 //	Importing helpers and settings
 import valid from "./helpers/validation";
@@ -39,6 +40,13 @@ routes.put("/roomImage/:id", roomUpload, auth.verify, valid.updateRoomImage, Roo
 routes.delete("/room/:id", auth.verify, valid.deleteRoom, RoomController.delete);
 routes.get("/allRooms", RoomController.all);
 routes.get("/searchRoom", auth.verify, valid.searchRoom, RoomController.search);
+
+//	User Room
+routes.get("/userRoom", auth.verify, UserRoomController.index);
+routes.post("/userRoom", auth.verify, valid.createUserRoom, UserRoomController.create);
+routes.delete("/userRoom/:id", auth.verify, valid.deleteUserRoom, UserRoomController.delete);
+routes.get("/allRoomUsers/:id", auth.verify, UserRoomController.allRoomUsers);
+routes.get("/allUsersRooms", UserRoomController.all);
 
 //	Not found page
 routes.get("*", (req: Request, res: Response) => {
