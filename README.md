@@ -13,6 +13,8 @@
 
 <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/ThiagoPereiraUFV/Chatzap-backend">
 
+<img alt="GitHub workflow status" src="https://img.shields.io/github/workflow/status/ThiagoPereiraUFV/Chatzap-backend/Tests">
+
 <img alt="License" src="https://img.shields.io/badge/license-MIT-brightgreen">
 </p>
 
