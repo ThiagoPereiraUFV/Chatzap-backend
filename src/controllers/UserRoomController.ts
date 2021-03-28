@@ -1,94 +1,79 @@
-//	Importing UsersRooms repository
+//  Importing express, mongoose and JWT resources
+import { Request, Response } from "express";
+import mongoose from "mongoose";
+
+//	Importing Rooms repository
 import UsersRoomsRepository from "../repositories/UsersRoomsRepository";
 
+//	User room features
 class UserRoomController {
-	//	Get user-room relationship by user id
-	getByIdUser(id: string) {
-		if(!id || !id.length) {
-			return { error: "Id inválido!" };
-		} else {
-			const userRoom = UsersRoomsRepository.findByIdUser(id);
+	//	Return user room relationships from user
+	async index(req: Request, res: Response) {
+		const userId = req.headers.authorization;
 
+		if(!userId || !userId.length || !mongoose.isValidObjectId(userId)) {
+			return res.status(400).send("Invalid id!");
+		}
+
+		await UsersRoomsRepository.findByUserId(userId).then((response) => {
+			if(response) {
+				return res.status(200).json(response);
+			} else {
+				return res.status(404).send("User rooms not found!");
+			}
+		}).catch((error) => {
+			return res.status(500).send(error);
+		});
+	}
+
+	//	Create a new user room relationship
+	async create(req: Request, res: Response) {
+		const userId = req.headers.authorization;
+		const roomId = req.params.id;
+
+		UsersRoomsRepository.create({
+			userId,
+			roomId
+		}).then((userRoom) => {
 			if(userRoom) {
-				return { userRoom };
+				return res.status(201).json(userRoom);
 			} else {
-				return { error: "Usuário não existe ou não está relacionado à alguma sala!" };
+				return res.status(400).send("We couldn't process your request, try again later!");
 			}
-		}
+		}).catch((error) => {
+			return res.status(500).send(error);
+		});
 	}
 
-	//	Get user-room relationship by room id
-	getByIdRoom(id: string) {
-		if(!id || !id.length) {
-			return { error: "Id inválido!" };
-		} else {
-			const user = UsersRoomsRepository.findByIdRoom(id);
+	//	Remove user room relationship
+	async delete(req: Request, res: Response) {
+		const userId = req.headers.authorization;
+		const roomId = req.params.id;
 
-			if(user) {
-				return { user };
-			} else {
-				return { error: "Sala não existe ou não está relacionada à algum usuário!" };
-			}
-		}
-	}
-
-	//	Create user-room relationship given user id and room id
-	create(idUser: string, idRoom: string) {
-		const errors: string[] = [];
-
-		if(!idUser || !idUser.length) {
-			errors.push("Id inválido!");
-		}
-
-		if(!idRoom || !idRoom.length) {
-			errors.push("Id inválido!");
-		}
-
-		if(errors.length) {
-			return { errors };
-		} else {
-			const existingUserRoom = UsersRoomsRepository.findByIdUserRoom(idUser, idRoom);
-
-			if(existingUserRoom) {
-				return { error: "Usuário já está vinculado à sala!" };
-			} else {
-				const user = {
-					idUser,
-					idRoom
-				};
-
-				UsersRoomsRepository.create(user);
-
-				return { user };
-			}
-		}
-	}
-
-	//	Delete user-room relationship given user id and room id
-	deleteByIdUserRoom(idUser: string, idRoom: string) {
-		const errors: string[] = [];
-
-		if(!idUser || !idUser.length) {
-			errors.push("Id inválido!");
-		}
-
-		if(!idRoom || !idRoom.length) {
-			errors.push("Id inválido!");
-		}
-
-		if(errors.length) {
-			return { errors };
-		} else {
-			const userRoom = UsersRoomsRepository.deleteByIdUserRoom(idUser, idRoom);
-
+		await UsersRoomsRepository.delete(roomId, userId).then((userRoom) => {
 			if(userRoom) {
-				return { userRoom };
+				return res.status(200).send("The user room has been deleted!");
 			} else {
-				return { error: "O usuário não está vinculado à sala!" };
+				return res.status(404).send("Room not found!");
 			}
-		}
+		}).catch((error) => {
+			return res.status(500).send(error);
+		});
 	}
-}
 
-//	Exporting User controller
+	//	Return all user rooms relationships
+	async all(req: Request, res: Response) {
+		await UsersRoomsRepository.all().then((response) => {
+			if(response) {
+				return res.status(200).json(response);
+			} else {
+				return res.status(404).send("User rooms not found!");
+			}
+		}).catch((error) => {
+			return res.status(500).send(error);
+		});
+	}
+};
+
+//	Exporting User Room controller
 export default new UserRoomController();
