@@ -43,7 +43,7 @@ routes.get("/searchRoom", auth.verify, valid.searchRoom, RoomController.search);
 
 //	User Room
 routes.get("/userRoom", auth.verify, UserRoomController.index);
-routes.post("/userRoom", auth.verify, valid.createUserRoom, UserRoomController.create);
+routes.post("/userRoom/:id", auth.verify, valid.createUserRoom, UserRoomController.create);
 routes.delete("/userRoom/:id", auth.verify, valid.deleteUserRoom, UserRoomController.delete);
 routes.get("/allRoomUsers/:id", auth.verify, UserRoomController.allRoomUsers);
 routes.get("/allUsersRooms", UserRoomController.all);

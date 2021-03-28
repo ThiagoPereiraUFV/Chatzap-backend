@@ -2,10 +2,10 @@
 import { Request, Response } from "express";
 import mongoose from "mongoose";
 
-//	Importing Rooms repository
+//	Importing UsersRooms repository
 import UsersRoomsRepository from "../repositories/UsersRoomsRepository";
 
-//	User room features
+//	User user room features
 class UserRoomController {
 	//	Return user room relationships from user
 	async index(req: Request, res: Response) {
