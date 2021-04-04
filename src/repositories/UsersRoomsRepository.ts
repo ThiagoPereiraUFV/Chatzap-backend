@@ -4,6 +4,9 @@ class UsersRoomsRepository {
 	public async findById(id: string) {
 		return await usersRooms.findById(id);
 	}
+	public async findByIds(userId: string, roomId: string) {
+		return await usersRooms.findOne({ userId, roomId });
+	}
 
 	public async findByUserId(userId: string) {
 		return await usersRooms.find({ userId }).populate("roomId");
@@ -17,8 +20,8 @@ class UsersRoomsRepository {
 		return await usersRooms.create(userRoom);
 	}
 
-	public async delete(userId: string | undefined, roomId: string | undefined) {
-		return await usersRooms.deleteOne({ userId, roomId });
+	public async delete(userId: string | undefined, roomId: string) {
+		return await usersRooms.findOneAndDelete({ userId, roomId });
 	}
 
 	public async all() {

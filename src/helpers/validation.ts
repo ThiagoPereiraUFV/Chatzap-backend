@@ -2,8 +2,10 @@
 import { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
 
-//	Importing Users repository
+//	Importing repositories
 import UsersRepository from "../repositories/UsersRepository";
+import RoomsRepository from "../repositories/RoomsRepository";
+import UsersRoomsRepository from "../repositories/UsersRoomsRepository";
 
 //	Importing helpers
 import { deleteFile } from "../helpers/deleteFile";
@@ -255,10 +257,14 @@ export default {
 
 		if(!userId || !userId.length || !mongoose.isValidObjectId(userId)) {
 			errors.push("Invalid id!");
-		}
-
-		if(!roomId || !roomId.length || !mongoose.isValidObjectId(roomId)) {
+		} else if(!roomId || !roomId.length || !mongoose.isValidObjectId(roomId)) {
 			errors.push("Invalid id!");
+		} else if(!(await UsersRepository.findById(userId))) {
+			errors.push("User not found!");
+		} else if(!(await RoomsRepository.findById(roomId))) {
+			errors.push("Room not found!");
+		} else if(await UsersRoomsRepository.findByIds(userId, roomId)) {
+			errors.push("Invalid operation!");
 		}
 
 		if(errors.length) {

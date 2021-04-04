@@ -74,7 +74,7 @@ class RoomController {
 		const roomId = req.params.id;
 		const filename = req.file.filename;
 
-		await RoomsRepository.findById(roomId, userId).then((room) => {
+		await RoomsRepository.findByIds(roomId, userId).then((room) => {
 			if(room) {
 				const deleteImage = room.image;
 				room.image = filename;

@@ -5,7 +5,11 @@ class RoomsRepository {
 		return await rooms.create(room);
 	}
 
-	public async findById(_id: string | undefined, userId: string | undefined) {
+	public async findById(id: string | undefined) {
+		return await rooms.findById(id);
+	}
+
+	public async findByIds(_id: string | undefined, userId: string | undefined) {
 		return await rooms.findOne({ _id, userId });
 	}
 
