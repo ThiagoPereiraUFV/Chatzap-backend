@@ -26,6 +26,19 @@ class UsersRoomsRepository {
 			creationDate: "desc"
 		});
 	}
+
+	public async find(userId: string | undefined, query: string | undefined) {
+		return await usersRooms.find({
+			userId
+		}).populate({
+			path: "roomId",
+			match: {
+				name: new RegExp(<string>query, "i")
+			}
+		}).sort({
+			creationDate: "desc"
+		});
+	}
 }
 
 export default new UsersRoomsRepository();

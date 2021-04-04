@@ -39,7 +39,6 @@ routes.put("/room/:id", auth.verify, valid.updateRoom, RoomController.update);
 routes.put("/roomImage/:id", roomUpload, auth.verify, valid.updateRoomImage, RoomController.updateImage);
 routes.delete("/room/:id", auth.verify, valid.deleteRoom, RoomController.delete);
 routes.get("/allRooms", RoomController.all);
-routes.get("/searchRoom", auth.verify, valid.searchRoom, RoomController.search);
 
 //	User Room
 routes.get("/userRoom", auth.verify, UserRoomController.index);
@@ -47,6 +46,7 @@ routes.post("/userRoom/:id", auth.verify, valid.createUserRoom, UserRoomControll
 routes.delete("/userRoom/:id", auth.verify, valid.deleteUserRoom, UserRoomController.delete);
 routes.get("/allRoomUsers/:id", UserRoomController.allRoomUsers);
 routes.get("/allUsersRooms", UserRoomController.all);
+routes.get("/searchRoom", auth.verify, valid.searchRoom, UserRoomController.search);
 
 //	Not found page
 routes.get("*", (req: Request, res: Response) => {
