@@ -1,7 +1,6 @@
 //  Importing mongoose, intefaces and bcrypt resources
 import { Schema, model } from "mongoose";
 import { User } from "./interfaces/User";
-import { UserRoom } from "./interfaces/UserRoom";
 import bcrypt from "bcrypt";
 
 //	Defining User schema
@@ -26,6 +25,11 @@ const UserSchema = new Schema<User>({
 		type: String,
 		set: (p: String) => bcrypt.hashSync(p, bcrypt.genSaltSync(10)),
 		required: true
+	},
+	online: {
+		type: Boolean,
+		default: false,
+		required: false
 	},
 	image: {
 		type: String,

@@ -5,7 +5,7 @@ import { Document, Types } from "mongoose";
 export interface Message extends Document {
 	userId: Types.ObjectId,
 	roomId: Types.ObjectId,
-	text: String | RegExp,
+	text: string | RegExp,
 	createdAt: Date,
 	updatedAt: Date
 };

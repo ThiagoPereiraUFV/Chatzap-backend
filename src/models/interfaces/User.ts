@@ -7,6 +7,7 @@ export interface User extends Document {
 	phone: string,
 	email?: string,
 	password: string,
+	online: boolean,
 	image?: string,
 	createdAt: Date,
 	updatedAt: Date,
