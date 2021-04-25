@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 
 //	Importing Rooms repository
 import RoomsRepository from "../repositories/RoomsRepository";
+import UsersRoomsRepository from "../repositories/UsersRoomsRepository";
 
 //	Importing helpers
 import { deleteFile } from "../helpers/deleteFile";
@@ -37,10 +38,22 @@ class RoomController {
 
 		RoomsRepository.create({
 			userId,
-			name: name.trim()
+			name: name.trim(),
+			nMembers: 1
 		}).then((room) => {
 			if(room) {
-				return res.status(201).json(room);
+				UsersRoomsRepository.create({
+					userId,
+					roomId: room?.id
+				}).then((userRoom) => {
+					if(userRoom) {
+						return res.status(201).json(room);
+					} else {
+						return res.status(400).send("We couldn't process your request, try again later!");
+					}
+				}).catch((error) => {
+					return res.status(500).send(error);
+				});
 			} else {
 				return res.status(400).send("We couldn't process your request, try again later!");
 			}
