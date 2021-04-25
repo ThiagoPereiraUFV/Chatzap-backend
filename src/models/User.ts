@@ -24,7 +24,6 @@ const UserSchema = new Schema<User>({
 	password: {
 		type: String,
 		set: (p: String) => bcrypt.hashSync(p, bcrypt.genSaltSync(10)),
-		select: false,
 		required: true
 	},
 	online: {
