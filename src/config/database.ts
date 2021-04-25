@@ -22,8 +22,8 @@ class Database {
 	}
 
 	//	Connect to database
-	public connect(): void {
-		mongoose.connect(this.uri, {
+	public async connect(): Promise<void> {
+		await mongoose.connect(this.uri, {
 			useNewUrlParser: true,
 			useUnifiedTopology: true
 		}).then(() => {
