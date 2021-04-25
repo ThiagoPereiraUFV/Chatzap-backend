@@ -28,7 +28,7 @@ class RoomsRepository {
 		return await rooms.find().sort({
 			name: "asc",
 			creationDate: "desc"
-		});
+		}).populate("userId");
 	}
 
 	public async find(userId: string | undefined, query: string | undefined) {
