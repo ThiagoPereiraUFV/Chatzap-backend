@@ -50,16 +50,16 @@ describe("User Room", () => {
 		}).expect(201).then((response) => roomId[1] = response.body._id);
 	});
 
-	test("Should be able to create a user room relationship between first user and first room", async () => {
+	test("Should not be able to create a user room relationship between first user and first room", async () => {
 		await request(app).post("/userRoom/" + roomId[0]).set({
 			"x-access-token": userToken[0]
-		}).expect(201).then((response) => userRoomId[0] = response.body._id);
+		}).expect(400);
 	});
 
-	test("Should be able to create a user room relationship between second user and second room", async () => {
+	test("Should not be able to create a user room relationship between second user and second room", async () => {
 		await request(app).post("/userRoom/" + roomId[1]).set({
 			"x-access-token": userToken[1]
-		}).expect(201).then((response) => userRoomId[1] = response.body._id);
+		}).expect(400);
 	});
 
 	test("Should be able to create a user room relationship between first user and second room", async () => {
