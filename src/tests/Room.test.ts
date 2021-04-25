@@ -53,18 +53,6 @@ describe("Room", () => {
 		await request(app).get("/allRooms").expect(200);
 	});
 
-	test("Should be able to get two rooms named Room Example", async () => {
-		await request(app).get("/searchRoom?q=Room Example").set({
-			"x-access-token": userToken
-		}).expect(200).then((response) => expect(response.body.length).toBe(2));
-	});
-
-	test("Should be able to get zero rooms named Maria", async () => {
-		await request(app).get("/searchRoom?q=Maria").set({
-			"x-access-token": userToken
-		}).expect(200).then((response) => expect(response.body.length).toBe(0));
-	});
-
 	test("Should be able to update name of the first created room", async () => {
 		await request(app).put("/room/" + roomId[0]).send({
 			name: "Room Updated Example"
