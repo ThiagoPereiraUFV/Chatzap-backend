@@ -24,6 +24,10 @@ class UsersRoomsRepository {
 		return await usersRooms.findOneAndDelete({ userId, roomId });
 	}
 
+	public async deleteAllFromUser(userId: string | undefined) {
+		return await usersRooms.deleteMany({ userId });
+	}
+
 	public async all() {
 		return await usersRooms.find().sort({
 			creationDate: "desc"
