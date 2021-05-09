@@ -5,7 +5,11 @@ class RoomsRepository {
 		return await rooms.create(room);
 	}
 
-	public async findById(_id: string | undefined, userId: string | undefined) {
+	public async findById(id: string | undefined) {
+		return await rooms.findById(id);
+	}
+
+	public async findByIds(_id: string | undefined, userId: string | undefined) {
 		return await rooms.findOne({ _id, userId });
 	}
 
@@ -24,20 +28,13 @@ class RoomsRepository {
 		return await rooms.find().sort({
 			name: "asc",
 			creationDate: "desc"
-		});
+		}).populate("userId");
 	}
 
 	public async find(userId: string | undefined, query: string | undefined) {
 		return await rooms.find({
 			userId,
-			$or: [
-				{
-					name: {
-						$regex: ".*" + query + ".*",
-						$options: "i"
-					}
-				}
-			]
+			name: new RegExp(<string>query, "i")
 		}).sort({
 			name: "asc",
 			creationDate: "desc"

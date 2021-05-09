@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 
 //	Importing UsersRooms repository
 import UsersRoomsRepository from "../repositories/UsersRoomsRepository";
+import RoomsRepository from "../repositories/RoomsRepository";
 
 //	User user room features
 class UserRoomController {
@@ -36,7 +37,25 @@ class UserRoomController {
 			roomId
 		}).then((userRoom) => {
 			if(userRoom) {
-				return res.status(201).json(userRoom);
+				RoomsRepository.findById(roomId).then((room) => {
+					if(room) {
+						room.nMembers = room.nMembers+1;
+
+						room.save().then((response) => {
+							if(response) {
+								return res.status(201).json(userRoom);
+							} else {
+								return res.status(400).send("We couldn't process your request, try again later!");
+							}
+						}).catch((error) => {
+							return res.status(500).send(error);
+						});
+					} else {
+						return res.status(404).send("Room not found!");
+					}
+				}).catch((error) => {
+					return res.status(500).send(error);
+				});
 			} else {
 				return res.status(400).send("We couldn't process your request, try again later!");
 			}
@@ -52,7 +71,25 @@ class UserRoomController {
 
 		await UsersRoomsRepository.delete(userId, roomId).then((userRoom) => {
 			if(userRoom) {
-				return res.status(200).send("The user room has been deleted!");
+				RoomsRepository.findById(roomId).then((room) => {
+					if(room) {
+						room.nMembers = room.nMembers-1;
+
+						room.save().then((response) => {
+							if(response) {
+								return res.status(200).send("The user room has been deleted!");
+							} else {
+								return res.status(400).send("We couldn't process your request, try again later!");
+							}
+						}).catch((error) => {
+							return res.status(500).send(error);
+						});
+					} else {
+						return res.status(404).send("Room not found!");
+					}
+				}).catch((error) => {
+					return res.status(500).send(error);
+				});
 			} else {
 				return res.status(404).send("Room not found!");
 			}
@@ -74,6 +111,22 @@ class UserRoomController {
 				return res.status(200).json(response);
 			} else {
 				return res.status(404).send("User rooms not found!");
+			}
+		}).catch((error) => {
+			return res.status(500).send(error);
+		});
+	}
+
+	//	Return a list of rooms containing a specific word
+	async search(req: Request, res: Response) {
+		const userId = req.headers.authorization;
+		const query = req.query.q;
+
+		await UsersRoomsRepository.find(userId, <string>query).then((response) => {
+			if(response) {
+				return res.status(200).json(response);
+			} else {
+				return res.status(404).send("Rooms not found!");
 			}
 		}).catch((error) => {
 			return res.status(500).send(error);

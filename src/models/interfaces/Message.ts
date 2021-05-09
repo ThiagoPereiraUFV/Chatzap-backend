@@ -1,10 +1,11 @@
 //  Importing mongoose resources
 import { Document, Types } from "mongoose";
 
-//	Defining UserRoom interface
-export interface UserRoom extends Document {
+//	Defining Message interface
+export interface Message extends Document {
 	userId: Types.ObjectId,
-	roomId: Types.ObjectId | any,
+	roomId: Types.ObjectId,
+	text: string | RegExp,
 	createdAt: Date,
 	updatedAt: Date
 };

@@ -31,7 +31,7 @@ describe("Room", () => {
 		await request(app).post("/room").send({
 			name: "Room Example"
 		}).set({
-			"x-access-token": userToken
+			Authorization: "Bearer " + userToken
 		}).expect(201).then((response) => roomId[0] = response.body._id);
 	});
 
@@ -39,13 +39,13 @@ describe("Room", () => {
 		await request(app).post("/room").send({
 			name: "Room Example 2"
 		}).set({
-			"x-access-token": userToken
+			Authorization: "Bearer " + userToken
 		}).expect(201).then((response) => roomId[1] = response.body._id);
 	});
 
 	test("Should be able to get all user rooms", async () => {
 		await request(app).get("/room").set({
-			"x-access-token": userToken
+			Authorization: "Bearer " + userToken
 		}).expect(200);
 	});
 
@@ -53,29 +53,17 @@ describe("Room", () => {
 		await request(app).get("/allRooms").expect(200);
 	});
 
-	test("Should be able to get two rooms named Room Example", async () => {
-		await request(app).get("/searchRoom?q=Room Example").set({
-			"x-access-token": userToken
-		}).expect(200).then((response) => expect(response.body.length).toBe(2));
-	});
-
-	test("Should be able to get zero rooms named Maria", async () => {
-		await request(app).get("/searchRoom?q=Maria").set({
-			"x-access-token": userToken
-		}).expect(200).then((response) => expect(response.body.length).toBe(0));
-	});
-
 	test("Should be able to update name of the first created room", async () => {
 		await request(app).put("/room/" + roomId[0]).send({
 			name: "Room Updated Example"
 		}).set({
-			"x-access-token": userToken
+			Authorization: "Bearer " + userToken
 		}).expect(200);
 	});
 
 	test("Should be able to update image of the first created room", async () => {
 		await request(app).put("/roomImage/" + roomId[0]).attach("image", fileTest[0]).set({
-			"x-access-token": userToken
+			Authorization: "Bearer " + userToken
 		}).expect(200).then((response) => {
 			return request(app).get("/files/" + response.body.image).expect(200);
 		});
@@ -83,13 +71,13 @@ describe("Room", () => {
 
 	test("Should not be able to update image of the first created room", async () => {
 		await request(app).put("/roomImage/" + roomId[0]).attach("image", fileTest[1]).set({
-			"x-access-token": userToken
+			Authorization: "Bearer " + userToken
 		}).expect(400);
 	});
 
 	test("Should be able to delete first created room", async () => {
 		await request(app).delete("/room/" + roomId[0]).set({
-			"x-access-token": userToken
+			Authorization: "Bearer " + userToken
 		}).expect(200);
 	});
 
@@ -97,25 +85,25 @@ describe("Room", () => {
 		await request(app).put("/room/" + roomId[0]).send({
 			name: "Room Updated Example"
 		}).set({
-			"x-access-token": userToken
+			Authorization: "Bearer " + userToken
 		}).expect(404);
 	});
 
 	test("Should not be able to delete first created room", async () => {
 		await request(app).delete("/room/" + roomId[0]).set({
-			"x-access-token": userToken
+			Authorization: "Bearer " + userToken
 		}).expect(404);
 	});
 
 	test("Should be able to delete second created room", async () => {
 		await request(app).delete("/room/" + roomId[1]).set({
-			"x-access-token": userToken
+			Authorization: "Bearer " + userToken
 		}).expect(200);
 	});
 
 	test("Should be able to delete user", async () => {
 		await request(app).delete("/user").set({
-			"x-access-token": userToken,
+			Authorization: "Bearer " + userToken,
 			password: "password"
 		}).expect(200);
 	});

@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 
 //	Importing Users repository
 import UsersRepository from "../repositories/UsersRepository";
+import UsersRoomsRepository from "../repositories/UsersRoomsRepository";
 
 //	Importing helpers
 import { deleteFile } from "../helpers/deleteFile";
@@ -154,7 +155,15 @@ class UserController {
 							deleteFile(userUploads(user.image));
 						}
 
-						return res.status(200).send("The user has been deleted!");
+						UsersRoomsRepository.deleteAllFromUser(userId).then((response) => {
+							if(response?.ok) {
+								return res.status(200).send("The user has been deleted!");
+							} else {
+								return res.status(400).send("We couldn't process your request, try again later!");
+							}
+						}).catch((error) => {
+							return res.status(500).send(error);
+						});
 					}).catch((error) => {
 						return res.status(500).send(error);
 					});

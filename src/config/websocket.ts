@@ -3,16 +3,41 @@ import express from "express";
 import http from "http";
 import { Socket } from "socket.io";
 
-//	Importing User controller
-import UserController from "../controllers/UserController";
+//	Importing repositores
+import UsersRoomsRepository from "../repositories/UsersRoomsRepository";
+import UsersRepository from "../repositories/UsersRepository";
+import MessagesRepository from "../repositories/MessagesRepository";
 
 export function websocket(app: express.Application) {
 	//	Setting up server
 	const server = http.createServer(app);
 	const io = require("socket.io")(server);
 
+	const sockets = new Map();
+
 	//	User connection events
-	io.on("connection", (socket: Socket) => {/*
+	io.on("connection", (socket: Socket) => {
+		//	User gets online
+		socket.on("online", async (userId: string) => {
+			sockets.set(socket.id, userId);
+			const user = await UsersRepository.findById(userId);
+			const userRooms = await UsersRoomsRepository.findByUserId(user?._id);
+
+			for(const userRoom of userRooms) {
+				socket.join(userRoom?.roomId?._id);
+			}
+
+			user?.set("online", true);
+			await user?.save();
+		});
+
+		//	User set a room
+		socket.on("getMessages", async (roomId: string) => {
+			const roomMessages = await MessagesRepository.findByRoomId(roomId);
+
+			io.emit("messages", roomMessages);
+		});
+		/*
 		//	User joining group
 		socket.on("joinGroup", ({ name, number, group }, callback) => {
 			const { error, errors, user } = UserController.create(socket.id, name, number, group);
@@ -63,45 +88,32 @@ export function websocket(app: express.Application) {
 
 				callback();
 			}
-		});
+		});*/
 
 		//	User sending message
-		socket.on("sendMessage", (message, callback) => {
-			const { error, user } = UserController.get(socket.id);
+		socket.on("sendMessage", async ({ message, userId, roomId }) => {
+			const msg = {
+				userId,
+				roomId,
+				text: message
+			};
+			const createdMsg = await MessagesRepository.create(msg);
+			const sentMsg = await MessagesRepository.findById(createdMsg?.id);
 
-			if(error) {
-				callback(error);
-			} else {
-				//	Send user message to user room
-				io.to(user?.room).emit("message", {
-					user: user?.name,
-					number: user?.number,
-					text: message
-				});
-
-				//	Send room data to user room
-				io.to(user?.room).emit("groupData", {
-					room: user?.room,
-					users: UserController.allOnRoom(user?.room ?? "")
-				});
-
-				callback();
+			if(sentMsg) {
+				io.emit("message", sentMsg);
 			}
 		});
 
-		//	User disconnecting from group
-		socket.on("disconnect", () => {
-			const { error, user } = UserController.delete(socket.id);
+		//	User gets offline
+		socket.on("disconnect", async () => {
+			const userId = sockets.get(socket.id);
+			const user = await UsersRepository.findById(userId);
 
-			//	Send user disconnecting message to all room users
-			if(!user?.room.includes(user?.number)) {
-				socket.broadcast.to(user?.room ?? "").emit("message", {
-					user: "group",
-					number: "",
-					text: `${user?.name} saiu do grupo!`
-				});
-			}
-		});*/
+			sockets.delete(socket.id);
+			user?.set("online", false);
+			await user?.save();
+		});
 	});
 
 	return server;
