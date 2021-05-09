@@ -30,7 +30,7 @@ describe("User", () => {
 
 	test("Should be able to get created user", async () => {
 		await request(app).get("/user").set({
-			"x-access-token": userToken[0]
+			"Authorization": userToken[0]
 		}).expect(200);
 	});
 
@@ -60,7 +60,7 @@ describe("User", () => {
 
 	test("Should be able to update name, email and password of the first created user", async () => {
 		await request(app).put("/user").set({
-			"x-access-token": userToken[0]
+			"Authorization": userToken[0]
 		}).send({
 			name: "User Updated Example",
 			phone: phone[0],
@@ -72,7 +72,7 @@ describe("User", () => {
 
 	test("Should be able to update image of the first created user", async () => {
 		await request(app).put("/userImage").attach("image", fileTest[0]).set({
-			"x-access-token": userToken[0]
+			"Authorization": userToken[0]
 		}).expect(200).then((response) => {
 			return request(app).get("/files/" + response.body.image).expect(200);
 		});
@@ -80,13 +80,13 @@ describe("User", () => {
 
 	test("Should not be able to update image of the first created user", async () => {
 		await request(app).put("/userImage").attach("image", fileTest[1]).set({
-			"x-access-token": userToken[0]
+			"Authorization": userToken[0]
 		}).expect(400);
 	});
 
 	test("Should not be able to update phone of the first created user using an existing phone", async () => {
 		await request(app).put("/user").set({
-			"x-access-token": userToken[0]
+			"Authorization": userToken[0]
 		}).send({
 			name: "User",
 			phone: phone[1],
@@ -95,21 +95,21 @@ describe("User", () => {
 
 	test("Should not be able to delete first created user using wrong password", async () => {
 		await request(app).delete("/user").set({
-			"x-access-token": userToken[0],
+			"Authorization": userToken[0],
 			password: "password"
 		}).expect(400);
 	});
 
 	test("Should be able to delete first created user", async () => {
 		await request(app).delete("/user").set({
-			"x-access-token": userToken[0],
+			"Authorization": userToken[0],
 			password: "password1"
 		}).expect(200);
 	});
 
 	test("Should be able to delete second created user", async () => {
 		await request(app).delete("/user").set({
-			"x-access-token": userToken[1],
+			"Authorization": userToken[1],
 			password: "password"
 		}).expect(200);
 	});
