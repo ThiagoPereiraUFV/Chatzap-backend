@@ -13,7 +13,7 @@ export default {
 			try {
 				const [ bearer, tkn ] = token.split(" ");
 
-				if(!bearer || bearer !== "Bearer" || !tkn) {
+				if(!bearer || bearer !== "Bearer " || !tkn) {
 					return res.status(401).send("Invalid token!");
 				}
 

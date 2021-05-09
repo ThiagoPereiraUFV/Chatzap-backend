@@ -30,19 +30,19 @@ describe("Session", () => {
 			phone: phone,
 			password: "password"
 		}).set({
-			"Authorization": "Bearer" + userToken
+			"Authorization": "Bearer " + userToken
 		}).expect(201).then((response) => userToken = response.body.token);
 	});
 
 	test("Should be able to get a session", async () => {
 		await request(app).get("/session").set({
-			"Authorization": "Bearer" + userToken
+			"Authorization": "Bearer " + userToken
 		}).expect(200);
 	});
 
 	test("Should be able to delete user", async () => {
 		return await request(app).delete("/user").set({
-			"Authorization": "Bearer" + userToken,
+			"Authorization": "Bearer " + userToken,
 			password: "password"
 		}).expect(200);
 	});
