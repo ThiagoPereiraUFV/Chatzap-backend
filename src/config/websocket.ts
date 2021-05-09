@@ -3,12 +3,10 @@ import express from "express";
 import http from "http";
 import { Socket } from "socket.io";
 
-//	Importing User interface
-import { User } from "../models/interfaces/User";
-
 //	Importing repositores
 import UsersRoomsRepository from "../repositories/UsersRoomsRepository";
 import UsersRepository from "../repositories/UsersRepository";
+import MessagesRepository from "../repositories/MessagesRepository";
 
 export function websocket(app: express.Application) {
 	//	Setting up server
@@ -31,6 +29,13 @@ export function websocket(app: express.Application) {
 
 			user?.set("online", true);
 			await user?.save();
+		});
+
+		//	User set a room
+		socket.on("getMessages", async (roomId: string) => {
+			const roomMessages = await MessagesRepository.findByRoomId(roomId);
+
+			io.emit("messages", roomMessages);
 		});
 		/*
 		//	User joining group
@@ -83,31 +88,22 @@ export function websocket(app: express.Application) {
 
 				callback();
 			}
-		});
+		});*/
 
 		//	User sending message
-		socket.on("sendMessage", (message, callback) => {
-			const { error, user } = UserController.get(socket.id);
+		socket.on("sendMessage", async ({ message, userId, roomId }) => {
+			const msg = {
+				userId,
+				roomId,
+				text: message
+			};
+			const createdMsg = await MessagesRepository.create(msg);
+			const sentMsg = await MessagesRepository.findById(createdMsg?.id);
 
-			if(error) {
-				callback(error);
-			} else {
-				//	Send user message to user room
-				io.to(user?.room).emit("message", {
-					user: user?.name,
-					number: user?.number,
-					text: message
-				});
-
-				//	Send room data to user room
-				io.to(user?.room).emit("groupData", {
-					room: user?.room,
-					users: UserController.allOnRoom(user?.room ?? "")
-				});
-
-				callback();
+			if(sentMsg) {
+				io.emit("message", sentMsg);
 			}
-		});*/
+		});
 
 		//	User gets offline
 		socket.on("disconnect", async () => {

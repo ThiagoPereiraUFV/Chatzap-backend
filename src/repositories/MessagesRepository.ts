@@ -2,7 +2,7 @@ import messages from "../models/Message";
 
 class MessagesRepository {
 	public async findById(id: string) {
-		return await messages.findById(id);
+		return await messages.findById(id).populate("userId");
 	}
 
 	public async findByRoomId(roomId: string) {
