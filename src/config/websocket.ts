@@ -24,7 +24,7 @@ export function websocket(app: express.Application) {
 			const userRooms = await UsersRoomsRepository.findByUserId(user?._id);
 
 			for(const userRoom of userRooms) {
-				socket.join(userRoom?.roomId?._id);
+				socket.join(String(userRoom?.roomId?._id));
 			}
 
 			user?.set("online", true);
@@ -35,7 +35,7 @@ export function websocket(app: express.Application) {
 		socket.on("getMessages", async (roomId: string) => {
 			const roomMessages = await MessagesRepository.findByRoomId(roomId);
 
-			io.emit("messages", roomMessages);
+			socket.emit("messages", roomMessages);
 		});
 		/*
 		//	User joining group
@@ -91,9 +91,9 @@ export function websocket(app: express.Application) {
 		});*/
 
 		//	User sending message
-		socket.on("sendMessage", async ({ message, userId, roomId }) => {
+		socket.on("sendMessage", async ({ message, roomId }) => {
 			const msg = {
-				userId,
+				userId: sockets?.get(socket.id),
 				roomId,
 				text: message
 			};
@@ -101,7 +101,7 @@ export function websocket(app: express.Application) {
 			const sentMsg = await MessagesRepository.findById(createdMsg?.id);
 
 			if(sentMsg) {
-				io.emit("message", sentMsg);
+				io.to(roomId).emit("message", sentMsg);
 			}
 		});
 
