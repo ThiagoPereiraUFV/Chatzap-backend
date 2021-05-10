@@ -27,6 +27,30 @@ class UserRoomController {
 		});
 	}
 
+	//	Return only one user room relationships from user
+	async room(req: Request, res: Response) {
+		const userId = req.headers.authorization;
+		const roomId = req.params.id;
+
+		if(!userId || !userId.length || !mongoose.isValidObjectId(userId)) {
+			return res.status(400).send("Invalid id!");
+		}
+
+		if(!roomId || !roomId.length || !mongoose.isValidObjectId(roomId)) {
+			return res.status(400).send("Invalid id!");
+		}
+
+		await UsersRoomsRepository.findByIds(userId, roomId).then((response) => {
+			if(response) {
+				return res.status(200).json(response);
+			} else {
+				return res.status(404).send("User room not found!");
+			}
+		}).catch((error) => {
+			return res.status(500).send(error);
+		});
+	}
+
 	//	Create a new user room relationship
 	async create(req: Request, res: Response) {
 		const userId = req.headers.authorization;
