@@ -110,7 +110,7 @@ export function websocket(app: express.Application) {
 		});*/
 
 		//	User sending message
-		socket.on("sendMessage", async ({ message, roomId }) => {
+		socket.on("sendMessage", async (message: string, roomId: string) => {
 			const msg = {
 				userId: sockets?.get(socket.id),
 				roomId,
