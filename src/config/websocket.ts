@@ -56,58 +56,6 @@ export function websocket(app: express.Application) {
 
 			socket.emit("messages", roomMessages);
 		});
-		/*
-		//	User joining group
-		socket.on("joinGroup", ({ name, number, group }, callback) => {
-			const { error, errors, user } = UserController.create(socket.id, name, number, group);
-
-			if(error) {
-				callback(error);
-			} else if(errors) {
-				callback(errors);
-			} else {
-				//	Set user room
-				socket.join(user?.room ?? "");
-
-				//	Send user joining message to all room users
-				io.to(user?.room).emit("message", {
-					user: "group",
-					number: "",
-					text: `${user?.name} entrou no grupo`
-				});
-
-				//	Send room data to user room
-				io.to(user?.room).emit("groupData", {
-					room: user?.room,
-					users: UserController.allOnRoom(user?.room ?? "")
-				});
-
-				callback();
-			}
-		});
-
-		//	User joining direct
-		socket.on("joinDirect", ({ name, number, numberDirect }, callback) => {
-			const room = (number > numberDirect) ? number + numberDirect : numberDirect + number;
-			const { error, errors, user } = UserController.create(socket.id, name, number, room);
-
-			if(error) {
-				callback(error);
-			} else if(errors) {
-				callback(errors);
-			} else {
-				//	Set user room
-				socket.join(user?.room ?? "");
-
-				//	Send room data to user room
-				io.to(user?.room).emit("groupData", {
-					room: user?.room,
-					users: UserController.allOnRoom(user?.room ?? "")
-				});
-
-				callback();
-			}
-		});*/
 
 		//	User sending message
 		socket.on("sendMessage", async (message: string, roomId: string) => {
