@@ -1,19 +1,20 @@
 //	Importing express, http and socket.io resources
 import express from "express";
 import http from "http";
-import { Socket } from "socket.io";
+import { Socket, Server } from "socket.io";
 
 //	Importing repositores
 import UsersRoomsRepository from "../repositories/UsersRoomsRepository";
 import UsersRepository from "../repositories/UsersRepository";
 import MessagesRepository from "../repositories/MessagesRepository";
 
+//	Connected sockets
+const sockets = new Map();
+
 export function websocket(app: express.Application) {
 	//	Setting up server
 	const server = http.createServer(app);
-	const io = require("socket.io")(server);
-
-	const sockets = new Map();
+	const io = new Server(server);
 
 	//	User connection events
 	io.on("connection", (socket: Socket) => {
@@ -29,6 +30,24 @@ export function websocket(app: express.Application) {
 
 			user?.set("online", true);
 			await user?.save();
+		});
+
+		//	User joins a room
+		socket.on("joinRoom", async (roomId: string) => {
+			const userId = sockets?.get(socket.id);
+			const user = await UsersRepository.findById(userId);
+			const msg = {
+				userId,
+				roomId,
+				text: `${user?.name} entrou na sala`
+			};
+			const createdMsg = await MessagesRepository.create(msg);
+			const sentMsg = await MessagesRepository.findById(createdMsg?.id);
+
+			if(sentMsg) {
+				socket.join(roomId);
+				socket.to(roomId).emit("message", sentMsg);
+			}
 		});
 
 		//	User set a room
