@@ -5,7 +5,12 @@ class UsersRoomsRepository {
 		return await usersRooms.findById(id).populate("roomId");
 	}
 	public async findByIds(userId: string, roomId: string) {
-		return await usersRooms.findOne({ userId, roomId }).populate("roomId");
+		return await usersRooms.findOne({ userId, roomId }).populate({
+			path: "roomId",
+			populate: {
+				path: "userId"
+			}
+	 });
 	}
 
 	public async findByUserId(userId: string) {
