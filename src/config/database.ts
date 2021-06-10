@@ -14,9 +14,9 @@ class Database {
 		const dbUser = (["test", "dev"].includes(<string>process.env.NODE_ENV)) ? "tester" : "admin";
 		const password = (["test", "dev"].includes(<string>process.env.NODE_ENV)) ?
 			"testerpassword" : process.env.DBPASSWORD;
-		const cluster = "@easycontacts.yvbgh.mongodb.net";
+		const cluster = "@chatzap.t71lo.mongodb.net";
 		const dbOptions = "?retryWrites=true&w=majority";
-		const dbName = (["test", "dev"].includes(<string>process.env.NODE_ENV)) ? "test" : "production";
+		const dbName = process.env.NODE_ENV === "test" ? "test" : process.env.NODE_ENV === "dev" ? "dev" : "production";
 
 		this.uri = serverProtocol + dbUser + ":" + password + cluster + "/" + dbName + dbOptions;
 	}
@@ -27,7 +27,7 @@ class Database {
 			useNewUrlParser: true,
 			useUnifiedTopology: true
 		}).then(() => {
-			if(process.env.NODE_ENV != "test") {
+			if(process.env.NODE_ENV !== "test") {
 				console.log("Connection to database has been established successfully.");
 			}
 		}).catch((error) => {

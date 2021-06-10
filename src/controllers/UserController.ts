@@ -130,6 +130,10 @@ class UserController {
 
 						return res.status(400).send("Image could not be updated");
 					}
+				}).catch((error) => {
+					deleteFile(userUploads(filename));
+
+					return res.status(500).send(error);
 				});
 			} else {
 				deleteFile(userUploads(filename));
