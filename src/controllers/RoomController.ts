@@ -104,6 +104,10 @@ class RoomController {
 
 						return res.status(400).send("Image could not be updated");
 					}
+				}).catch((error) => {
+					deleteFile(roomUploads(filename));
+
+					return res.status(500).send(error);
 				});
 			} else {
 				deleteFile(roomUploads(filename));
