@@ -39,7 +39,7 @@ export function websocket(app: express.Application) {
 			const msg = {
 				userId,
 				roomId,
-				text: `${user?.name} entrou na sala`
+				text: `ROOM: ${user?.name} entrou na sala`
 			};
 			const createdMsg = await MessagesRepository.create(msg);
 			const sentMsg = await MessagesRepository.findById(createdMsg?.id);
