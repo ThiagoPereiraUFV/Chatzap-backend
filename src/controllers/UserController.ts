@@ -111,7 +111,7 @@ class UserController {
 	//	Update user image
 	async updateImage(req: Request, res: Response) {
 		const userId = req.headers.authorization;
-		const filename = req.file.filename;
+		const filename = (req.file) ? req.file.filename : "";
 
 		await UsersRepository.findById(userId).then((user) => {
 			if(user) {

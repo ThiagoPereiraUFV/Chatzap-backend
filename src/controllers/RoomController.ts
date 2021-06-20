@@ -85,7 +85,7 @@ class RoomController {
 	async updateImage(req: Request, res: Response) {
 		const userId = req.headers.authorization;
 		const roomId = req.params.id;
-		const filename = req.file.filename;
+		const filename = (req.file) ? req.file.filename : "";
 
 		await RoomsRepository.findByIds(roomId, userId).then((room) => {
 			if(room) {

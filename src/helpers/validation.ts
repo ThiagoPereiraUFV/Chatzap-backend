@@ -90,7 +90,7 @@ export default {
 
     //	Checking if the upload is really an image
     if(filename) {
-      const mimeType = (req.file.mimetype) ? req.file.mimetype.split("/")[0] : null;
+      const mimeType = (req?.file?.mimetype) ? req?.file?.mimetype.split("/")[0] : null;
 
       if(!mimeType || !mimeType.length || (mimeType != "image")) {
         errors.push("Invalid image type!");
@@ -185,7 +185,7 @@ export default {
 
     //	Checking if the upload is really an image
     if(filename) {
-      const mimeType = (req.file.mimetype) ? req.file.mimetype.split("/")[0] : null;
+      const mimeType = (req?.file?.mimetype) ? req?.file?.mimetype.split("/")[0] : null;
 
       if(!mimeType || !mimeType.length || (mimeType != "image")) {
         errors.push("Invalid image type!");
