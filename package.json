@@ -8,7 +8,7 @@
   "license": "MIT",
   "scripts": {
     "start": "ts-node --transpile-only ./src/index.ts",
-    "dev": "NODE_ENV=dev ts-node-dev --transpile-only --ignore-watch node_modules ./src/index.ts",
+    "dev": "NODE_ENV=dev ts-node-dev --ignore-watch node_modules ./src/index.ts",
     "test": "NODE_ENV=test SECRET=secrettest jest --testTimeout=30000"
   },
   "dependencies": {
