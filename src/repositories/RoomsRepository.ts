@@ -34,7 +34,7 @@ class RoomsRepository {
 	public async find(userId: string | undefined, query: string | undefined) {
 		return await rooms.find({
 			userId,
-			name: new RegExp(<string>query, "i")
+			name: new RegExp(<string>query, "iu")
 		}).sort({
 			name: "asc",
 			creationDate: "desc"

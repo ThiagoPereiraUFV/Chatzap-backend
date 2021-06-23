@@ -18,7 +18,7 @@ class Database {
 		const dbOptions = "?retryWrites=true&w=majority";
 		const dbName = process.env.NODE_ENV === "test" ? "test" : process.env.NODE_ENV === "dev" ? "dev" : "production";
 
-		this.uri = serverProtocol + dbUser + ":" + password + cluster + "/" + dbName + dbOptions;
+		this.uri = `${serverProtocol + dbUser}:${password}${cluster}/${dbName}${dbOptions}`;
 	}
 
 	//	Connect to database

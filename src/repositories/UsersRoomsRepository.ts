@@ -10,7 +10,7 @@ class UsersRoomsRepository {
 			populate: {
 				path: "userId"
 			}
-	 });
+		});
 	}
 
 	public async findByUserId(userId: string) {
@@ -45,7 +45,7 @@ class UsersRoomsRepository {
 		}).populate({
 			path: "roomId",
 			match: {
-				name: new RegExp(<string>query, "i")
+				name: new RegExp(<string>query, "iu")
 			}
 		}).sort({
 			creationDate: "desc"

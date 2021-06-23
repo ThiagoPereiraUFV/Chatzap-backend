@@ -11,7 +11,7 @@ import MessagesRepository from "../repositories/MessagesRepository";
 //	Connected sockets
 const sockets = new Map();
 
-export function websocket(app: express.Application) {
+export function websocket(app: express.Application): http.Server {
 	//	Setting up server
 	const server = http.createServer(app);
 	const io = new Server(server);

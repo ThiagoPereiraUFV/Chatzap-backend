@@ -26,7 +26,7 @@ class MessagesRepository {
 	public async find(roomId: string | undefined, query: string | undefined) {
 		return await messages.find({
 			roomId,
-			text: new RegExp(<string>query, "i")
+			text: new RegExp(<string>query, "iu")
 		}).sort({
 			creationDate: "desc"
 		});

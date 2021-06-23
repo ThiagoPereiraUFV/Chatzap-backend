@@ -1,6 +1,6 @@
 import fs from "fs";
 
-export function deleteFile(filepath: string) {
+export function deleteFile(filepath: string): void {
 	try {
 		if(fs.existsSync(filepath)) {
 			fs.unlinkSync(filepath);

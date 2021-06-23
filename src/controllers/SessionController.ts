@@ -33,15 +33,15 @@ class SessionController {
 
 		await UsersRepository.findByPhone(phone).then((user) => {
 			if(user) {
-					if(user.comparePassword(password)) {
-						const token = jwt.sign({ userId: user._id }, <string>process.env.SECRET, {
-							expiresIn: 86400
-						});
+				if(user.comparePassword(password)) {
+					const token = jwt.sign({ userId: user._id }, <string>process.env.SECRET, {
+						expiresIn: 86400
+					});
 
-						return res.status(201).json({ user, token });
-					} else {
-						return res.status(400).send("Wrong password, try again!");
-					}
+					return res.status(201).json({ user, token });
+				} else {
+					return res.status(400).send("Wrong password, try again!");
+				}
 			} else {
 				return res.status(404).send("User not found using this phone, try again!");
 			}
@@ -49,7 +49,7 @@ class SessionController {
 			return res.status(500).send(error);
 		});
 	}
-};
+}
 
 //	Exporting Session controller
 export default new SessionController();

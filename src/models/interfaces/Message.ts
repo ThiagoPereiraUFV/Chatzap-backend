@@ -8,4 +8,4 @@ export interface Message extends Document {
 	text: string | RegExp,
 	createdAt: Date,
 	updatedAt: Date
-};
+}

@@ -36,7 +36,7 @@ class RoomController {
 		const userId = req.headers.authorization;
 		const { name } = req.body;
 
-		RoomsRepository.create({
+		await RoomsRepository.create({
 			userId,
 			name: name.trim(),
 			nMembers: 1
@@ -68,7 +68,7 @@ class RoomController {
 		const roomId = req.params.id;
 		const { name } = req.body;
 
-		RoomsRepository.update(roomId, userId, {
+		await RoomsRepository.update(roomId, userId, {
 			name: name.trim()
 		}).then((response) => {
 			if(response) {
@@ -169,7 +169,7 @@ class RoomController {
 			return res.status(500).send(error);
 		});
 	}
-};
+}
 
 //	Exporting Room controller
 export default new RoomController();

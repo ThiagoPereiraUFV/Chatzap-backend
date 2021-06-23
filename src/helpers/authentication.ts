@@ -4,8 +4,8 @@ import jwt from "jsonwebtoken";
 
 export default {
 	//	Verify if current token is valid
-	async verify(req: Request, res: Response, next: NextFunction) {
-		const token = <string>req.headers["authorization"];
+	async verify(req: Request, res: Response, next: NextFunction): Promise<unknown> {
+		const token = <string>req.headers.authorization;
 
 		if(!token) {
 			return res.status(403).send("No token provided!");
@@ -21,13 +21,14 @@ export default {
 
 				if(decoded && decoded.userId) {
 					req.headers.authorization = decoded.userId;
+
 					return next();
 				} else {
 					return res.status(401).send("Invalid token!");
 				}
-			} catch (error) {
+			} catch(error) {
 				return res.status(401).send("Invalid token!");
 			}
 		}
 	}
-}
+};

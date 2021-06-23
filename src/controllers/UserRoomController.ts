@@ -56,14 +56,14 @@ class UserRoomController {
 		const userId = req.headers.authorization;
 		const roomId = req.params.id;
 
-		UsersRoomsRepository.create({
+		await UsersRoomsRepository.create({
 			userId,
 			roomId
 		}).then((userRoom) => {
 			if(userRoom) {
 				RoomsRepository.findById(roomId).then((room) => {
 					if(room) {
-						room.nMembers = room.nMembers+1;
+						room.nMembers += 1;
 
 						room.save().then((response) => {
 							if(response) {
@@ -97,7 +97,7 @@ class UserRoomController {
 			if(userRoom) {
 				RoomsRepository.findById(roomId).then((room) => {
 					if(room) {
-						room.nMembers = room.nMembers-1;
+						room.nMembers -= 1;
 
 						room.save().then((response) => {
 							if(response) {
@@ -169,7 +169,7 @@ class UserRoomController {
 			return res.status(500).send(error);
 		});
 	}
-};
+}
 
 //	Exporting User Room controller
 export default new UserRoomController();
