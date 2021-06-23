@@ -70,7 +70,7 @@ class UserController {
 		const { name, phone, email, passwordO, passwordN } = req.body;
 
 		await UsersRepository.findByPhone(phone).then((response) => {
-			if(response && (response._id !== userId)) {
+			if(response && (response._id != userId)) {
 				return res.status(400).send("This phone isn't available, try another!");
 			} else {
 				UsersRepository.findById(userId).then((user) => {
