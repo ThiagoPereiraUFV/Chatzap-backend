@@ -9,7 +9,7 @@ class UsersRepository {
 		return await users.findOne({ phone: (<string>phone).trim() });
 	}
 
-	public async create(user: object) {
+	public async create(user: Record<string, unknown>) {
 		return await users.create(user);
 	}
 

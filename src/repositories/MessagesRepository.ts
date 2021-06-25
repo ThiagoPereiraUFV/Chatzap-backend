@@ -9,7 +9,7 @@ class MessagesRepository {
 		return await messages.find({ roomId }).populate("userId");
 	}
 
-	public async create(message: object) {
+	public async create(message: Record<string, unknown>) {
 		return await messages.create(message);
 	}
 

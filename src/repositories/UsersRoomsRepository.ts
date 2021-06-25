@@ -21,7 +21,7 @@ class UsersRoomsRepository {
 		return await usersRooms.find({ roomId }).populate("userId");
 	}
 
-	public async create(userRoom: object) {
+	public async create(userRoom: Record<string, unknown>) {
 		return await usersRooms.create(userRoom);
 	}
 

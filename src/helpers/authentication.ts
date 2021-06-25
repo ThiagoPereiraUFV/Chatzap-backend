@@ -1,23 +1,27 @@
 //  Importing JWT and express resurces
 import { NextFunction, Request, Response } from "express";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
+
+interface jwtPayload extends JwtPayload {
+	userId: string
+}
 
 export default {
 	//	Verify if current token is valid
 	async verify(req: Request, res: Response, next: NextFunction): Promise<unknown> {
-		const token = <string>req.headers.authorization;
+		const bearerToken = req.headers.authorization;
 
-		if(!token) {
+		if(!bearerToken) {
 			return res.status(403).send("No token provided!");
 		} else {
 			try {
-				const [ bearer, tkn ] = token.split(" ");
+				const [ bearer, token ] = bearerToken.split(" ");
 
-				if(!bearer || bearer !== "Bearer" || !tkn) {
+				if(!bearer || bearer !== "Bearer" || !token) {
 					return res.status(401).send("Invalid token!");
 				}
 
-				const decoded = <any>jwt.verify(<string>tkn, <string>process.env.SECRET);
+				const decoded = <jwtPayload>jwt.verify(token, <string>process.env.SECRET);
 
 				if(decoded && decoded.userId) {
 					req.headers.authorization = decoded.userId;

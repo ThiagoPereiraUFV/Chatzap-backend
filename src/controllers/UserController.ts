@@ -70,7 +70,7 @@ class UserController {
 		const { name, phone, email, passwordO, passwordN } = req.body;
 
 		await UsersRepository.findByPhone(phone).then((response) => {
-			if(response && (response._id != userId)) {
+			if(response && (response._id.toString() !== userId)) {
 				return res.status(400).send("This phone isn't available, try another!");
 			} else {
 				UsersRepository.findById(userId).then((user) => {
@@ -87,9 +87,9 @@ class UserController {
 							}
 						}
 
-						user.save().then((response) => {
-							if(response) {
-								return res.status(200).send("Successful on updating your data!");
+						user.save().then((updatedUser) => {
+							if(updatedUser) {
+								return res.status(200).send(updatedUser);
 							} else {
 								return res.status(400).send("We couldn't save your changes, try again later!");
 							}

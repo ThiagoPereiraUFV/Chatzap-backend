@@ -1,7 +1,7 @@
 import rooms from "../models/Room";
 
 class RoomsRepository {
-	public async create(room: object) {
+	public async create(room: Record<string, unknown>) {
 		return await rooms.create(room);
 	}
 
@@ -41,7 +41,7 @@ class RoomsRepository {
 		});
 	}
 
-	public async update(_id: string | undefined, userId: string | undefined, room: object) {
+	public async update(_id: string | undefined, userId: string | undefined, room: Record<string, unknown>) {
 		return await rooms.findOneAndUpdate({ _id, userId }, room);
 	}
 
