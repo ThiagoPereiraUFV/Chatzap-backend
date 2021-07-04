@@ -1,7 +1,8 @@
-//  Importing express, mongoose and JWT resources
+//  Importing express, mongoose, JWT resources and env
 import { Request, Response } from "express";
 import mongoose from "mongoose";
-import jwt from "jsonwebtoken";
+import { sign } from "jsonwebtoken";
+import { SECRET } from "../config/env";
 
 //	Importing Users repository
 import UsersRepository from "../repositories/UsersRepository";
@@ -34,7 +35,7 @@ class SessionController {
 		await UsersRepository.findByPhone(phone).then((user) => {
 			if(user) {
 				if(user.comparePassword(password)) {
-					const token = jwt.sign({ userId: user._id }, <string>process.env.SECRET, {
+					const token = sign({ userId: user._id }, SECRET, {
 						expiresIn: 86400
 					});
 

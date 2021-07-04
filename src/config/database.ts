@@ -1,6 +1,6 @@
-//	Importing mongoose resources
+//	Importing mongoose resources and envs
 import mongoose from "mongoose";
-require("dotenv").config();
+import { DBPASSWORD, NODE_ENV } from "./env";
 
 class Database {
 	private uri: string;
@@ -11,12 +11,12 @@ class Database {
 		mongoose.set("useFindAndModify", false);
 
 		const serverProtocol = "mongodb+srv://";
-		const dbUser = (["test", "dev"].includes(<string>process.env.NODE_ENV)) ? "tester" : "admin";
-		const password = (["test", "dev"].includes(<string>process.env.NODE_ENV)) ?
-			"testerpassword" : process.env.DBPASSWORD;
+		const dbUser = (["test", "dev"].includes(NODE_ENV)) ? "tester" : "admin";
+		const password = (["test", "dev"].includes(NODE_ENV)) ?
+			"testerpassword" : DBPASSWORD;
 		const cluster = "@chatzap.t71lo.mongodb.net";
 		const dbOptions = "?retryWrites=true&w=majority";
-		const dbName = process.env.NODE_ENV === "test" ? "test" : process.env.NODE_ENV === "dev" ? "dev" : "production";
+		const dbName = NODE_ENV === "test" ? "test" : NODE_ENV === "dev" ? "dev" : "production";
 
 		this.uri = `${serverProtocol + dbUser}:${password}${cluster}/${dbName}${dbOptions}`;
 	}
@@ -27,7 +27,7 @@ class Database {
 			useNewUrlParser: true,
 			useUnifiedTopology: true
 		}).then(() => {
-			if(process.env.NODE_ENV !== "test") {
+			if(NODE_ENV !== "test") {
 				console.log("Connection to database has been established successfully.");
 			}
 		}).catch((error) => {

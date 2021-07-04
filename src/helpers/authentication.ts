@@ -1,6 +1,7 @@
-//  Importing JWT and express resurces
+//  Importing JWT, express resources and env
 import { NextFunction, Request, Response } from "express";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import { JwtPayload, verify } from "jsonwebtoken";
+import { SECRET } from "../config/env";
 
 interface jwtPayload extends JwtPayload {
 	userId: string
@@ -21,7 +22,7 @@ export default {
 					return res.status(401).send("Invalid token!");
 				}
 
-				const decoded = <jwtPayload>jwt.verify(token, <string>process.env.SECRET);
+				const decoded = <jwtPayload>verify(token, SECRET);
 
 				if(decoded && decoded.userId) {
 					req.headers.authorization = decoded.userId;

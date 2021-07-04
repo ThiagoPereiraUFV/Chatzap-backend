@@ -11,6 +11,8 @@ import UserRoomController from "./controllers/UserRoomController";
 import valid from "./helpers/validation";
 import auth from "./helpers/authentication";
 import { userUpload, roomUpload } from "./config/uploads";
+import { authenticate } from "passport";
+import { passportJwt } from "./config/passport";
 
 //  Setting up routes
 const routes = Router();
@@ -21,7 +23,7 @@ routes.get("/", (req: Request, res: Response) => {
 });
 
 //	Session
-routes.get("/session", auth.verify, SessionController.index);
+routes.get("/session", authenticate(passportJwt, { session: false }), SessionController.index);
 routes.post("/session", valid.createSession, SessionController.create);
 
 //	User
