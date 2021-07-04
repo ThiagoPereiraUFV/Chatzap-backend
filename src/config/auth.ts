@@ -14,5 +14,5 @@ export async function authJWT(req: Request, res: Response, next: NextFunction) {
 
 			return next();
 		}
-	})(req, res);
+	})(req, res, next);
 }

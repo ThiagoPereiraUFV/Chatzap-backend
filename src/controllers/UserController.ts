@@ -135,7 +135,8 @@ class UserController {
 
 	//	Remove user
 	async delete(req: Request, res: Response) {
-		const { authorization: userId, password } = req.headers;
+		const { password } = req.headers;
+		const userId = req.body.user.id;
 
 		await UsersRepository.findById(userId).then((user) => {
 			if(user) {
