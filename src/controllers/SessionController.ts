@@ -21,7 +21,7 @@ class SessionController {
 			if(user) {
 				if(user.comparePassword(password)) {
 					const token = sign({ userId: user._id }, SECRET, {
-						expiresIn: 86400
+						expiresIn: "1d"
 					});
 
 					return res.status(201).json({ user, token });

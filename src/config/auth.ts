@@ -6,9 +6,9 @@ import { User } from "../models/interfaces/User";
 import { passportJwt } from "./passport";
 
 export async function authJWT(req: Request, res: Response, next: NextFunction) {
-	authenticate(passportJwt, (error, user: User) => {
-		if(error) {
-			return res.status(500).send(error);
+	authenticate(passportJwt, (error, user: User, info) => {
+		if(info) {
+			return res.status(401).send("Invalid token!");
 		} else {
 			req.body.user = user;
 

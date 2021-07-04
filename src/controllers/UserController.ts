@@ -34,7 +34,7 @@ class UserController {
 				}).then((user) => {
 					if(user) {
 						const token = sign({ userId: user._id }, SECRET, {
-							expiresIn: 86400
+							expiresIn: "1d"
 						});
 
 						return res.status(201).json({ user, token });
