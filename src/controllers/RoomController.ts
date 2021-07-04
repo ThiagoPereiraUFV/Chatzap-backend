@@ -14,7 +14,7 @@ import { roomUploads } from "../helpers/paths";
 class RoomController {
 	//	Return user rooms
 	async index(req: Request, res: Response) {
-		const userId = req.headers.authorization;
+		const userId = req.body.user.id;
 
 		if(!userId || !userId.length || !mongoose.isValidObjectId(userId)) {
 			return res.status(400).send("Invalid id!");
@@ -33,7 +33,7 @@ class RoomController {
 
 	//	Create a new room
 	async create(req: Request, res: Response) {
-		const userId = req.headers.authorization;
+		const userId = req.body.user.id;
 		const { name } = req.body;
 
 		await RoomsRepository.create({
@@ -64,7 +64,7 @@ class RoomController {
 
 	//	Update room
 	async update(req: Request, res: Response) {
-		const userId = req.headers.authorization;
+		const userId = req.body.user.id;
 		const roomId = req.params.id;
 		const { name } = req.body;
 
@@ -83,7 +83,7 @@ class RoomController {
 
 	//	Update room image
 	async updateImage(req: Request, res: Response) {
-		const userId = req.headers.authorization;
+		const userId = req.body.user.id;
 		const roomId = req.params.id;
 		const filename = (req.file) ? req.file.filename : "";
 
@@ -123,7 +123,7 @@ class RoomController {
 
 	//	Remove room
 	async delete(req: Request, res: Response) {
-		const userId = req.headers.authorization;
+		const userId = req.body.user.id;
 		const roomId = req.params.id;
 
 		await RoomsRepository.delete(roomId, userId).then((room) => {
@@ -143,7 +143,7 @@ class RoomController {
 
 	//	Return a list of rooms containing a specific word
 	async search(req: Request, res: Response) {
-		const userId = req.headers.authorization;
+		const userId = req.body.user.id;
 		const query = req.query.q;
 
 		await RoomsRepository.find(userId, <string>query).then((response) => {

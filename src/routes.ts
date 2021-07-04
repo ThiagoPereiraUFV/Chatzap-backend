@@ -9,10 +9,8 @@ import UserRoomController from "./controllers/UserRoomController";
 
 //	Importing helpers and settings
 import valid from "./helpers/validation";
-import auth from "./helpers/authentication";
 import { userUpload, roomUpload } from "./config/uploads";
-import { authenticate } from "passport";
-import { passportJwt } from "./config/passport";
+import { authJWT } from "./config/auth";
 
 //  Setting up routes
 const routes = Router();
@@ -23,33 +21,33 @@ routes.get("/", (req: Request, res: Response) => {
 });
 
 //	Session
-routes.get("/session", authenticate(passportJwt, { session: false }), SessionController.index);
+routes.get("/session", authJWT, SessionController.index);
 routes.post("/session", valid.createSession, SessionController.create);
 
 //	User
-routes.get("/user", auth.verify, UserController.index);
+routes.get("/user", authJWT, UserController.index);
 routes.post("/user", valid.createUser, UserController.create);
-routes.put("/user", auth.verify, valid.updateUser, UserController.update);
-routes.put("/userImage", userUpload, auth.verify, valid.updateUserImage, UserController.updateImage);
-routes.delete("/user", auth.verify, valid.deleteUser, UserController.delete);
+routes.put("/user", authJWT, valid.updateUser, UserController.update);
+routes.put("/userImage", userUpload, authJWT, valid.updateUserImage, UserController.updateImage);
+routes.delete("/user", authJWT, valid.deleteUser, UserController.delete);
 routes.get("/allUsers", UserController.all);
 
 //	Room
-routes.get("/room", auth.verify, RoomController.index);
-routes.post("/room", auth.verify, valid.createRoom, RoomController.create);
-routes.put("/room/:id", auth.verify, valid.updateRoom, RoomController.update);
-routes.put("/roomImage/:id", roomUpload, auth.verify, valid.updateRoomImage, RoomController.updateImage);
-routes.delete("/room/:id", auth.verify, valid.deleteRoom, RoomController.delete);
+routes.get("/room", authJWT, RoomController.index);
+routes.post("/room", authJWT, valid.createRoom, RoomController.create);
+routes.put("/room/:id", authJWT, valid.updateRoom, RoomController.update);
+routes.put("/roomImage/:id", roomUpload, authJWT, valid.updateRoomImage, RoomController.updateImage);
+routes.delete("/room/:id", authJWT, valid.deleteRoom, RoomController.delete);
 routes.get("/allRooms", RoomController.all);
 
 //	User Room
-routes.get("/userRoom", auth.verify, UserRoomController.index);
-routes.get("/userRoom/:id", auth.verify, UserRoomController.room);
-routes.post("/userRoom/:id", auth.verify, valid.createUserRoom, UserRoomController.create);
-routes.delete("/userRoom/:id", auth.verify, valid.deleteUserRoom, UserRoomController.delete);
-routes.get("/allRoomUsers/:id", auth.verify, UserRoomController.allRoomUsers);
+routes.get("/userRoom", authJWT, UserRoomController.index);
+routes.get("/userRoom/:id", authJWT, UserRoomController.room);
+routes.post("/userRoom/:id", authJWT, valid.createUserRoom, UserRoomController.create);
+routes.delete("/userRoom/:id", authJWT, valid.deleteUserRoom, UserRoomController.delete);
+routes.get("/allRoomUsers/:id", authJWT, UserRoomController.allRoomUsers);
 routes.get("/allUsersRooms", UserRoomController.all);
-routes.get("/searchRoom", auth.verify, valid.searchRoom, UserRoomController.search);
+routes.get("/searchRoom", authJWT, valid.searchRoom, UserRoomController.search);
 
 //	Not found page
 routes.get("*", (req: Request, res: Response) => {

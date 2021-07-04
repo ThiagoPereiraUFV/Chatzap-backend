@@ -10,7 +10,7 @@ import RoomsRepository from "../repositories/RoomsRepository";
 class UserRoomController {
 	//	Return user room relationships from user
 	async index(req: Request, res: Response) {
-		const userId = req.headers.authorization;
+		const userId = req.body.user.id;
 
 		if(!userId || !userId.length || !mongoose.isValidObjectId(userId)) {
 			return res.status(400).send("Invalid id!");
@@ -29,7 +29,7 @@ class UserRoomController {
 
 	//	Return only one user room relationships from user
 	async room(req: Request, res: Response) {
-		const userId = req.headers.authorization;
+		const userId = req.body.user.id;
 		const roomId = req.params.id;
 
 		if(!userId || !userId.length || !mongoose.isValidObjectId(userId)) {
@@ -53,7 +53,7 @@ class UserRoomController {
 
 	//	Create a new user room relationship
 	async create(req: Request, res: Response) {
-		const userId = req.headers.authorization;
+		const userId = req.body.user.id;
 		const roomId = req.params.id;
 
 		await UsersRoomsRepository.create({
@@ -90,7 +90,7 @@ class UserRoomController {
 
 	//	Remove user room relationship
 	async delete(req: Request, res: Response) {
-		const userId = req.headers.authorization;
+		const userId = req.body.user.id;
 		const roomId = req.params.id;
 
 		await UsersRoomsRepository.delete(userId, roomId).then((userRoom) => {
@@ -143,7 +143,7 @@ class UserRoomController {
 
 	//	Return a list of rooms containing a specific word
 	async search(req: Request, res: Response) {
-		const userId = req.headers.authorization;
+		const userId = req.body.user.id;
 		const query = req.query.q;
 
 		await UsersRoomsRepository.find(userId, <string>query).then((response) => {

@@ -1,6 +1,5 @@
 //  Importing express, mongoose, JWT resources and env
 import { Request, Response } from "express";
-import mongoose from "mongoose";
 import { sign } from "jsonwebtoken";
 import { SECRET } from "../config/env";
 
@@ -16,21 +15,7 @@ import { userUploads } from "../helpers/paths";
 class UserController {
 	//	Return an user on database given id
 	async index(req: Request, res: Response) {
-		const userId = req.headers.authorization;
-
-		if(!userId || !userId.length || !mongoose.isValidObjectId(userId)) {
-			return res.status(400).send("Invalid id!");
-		}
-
-		await UsersRepository.findById(userId).then((user) => {
-			if(user) {
-				return res.status(200).json(user);
-			} else {
-				return res.status(404).send("User not found!");
-			}
-		}).catch((error) => {
-			return res.status(500).send(error);
-		});
+		return res.status(200).json(req.body.user);
 	}
 
 	//	Create a new user
@@ -67,7 +52,7 @@ class UserController {
 
 	//	Update user
 	async update(req: Request, res: Response) {
-		const userId = req.headers.authorization;
+		const userId = req.body.user.id;
 		const { name, phone, email, passwordO, passwordN } = req.body;
 
 		await UsersRepository.findByPhone(phone).then((response) => {
@@ -111,7 +96,7 @@ class UserController {
 
 	//	Update user image
 	async updateImage(req: Request, res: Response) {
-		const userId = req.headers.authorization;
+		const userId = req.body.user.id;
 		const filename = (req.file) ? req.file.filename : "";
 
 		await UsersRepository.findById(userId).then((user) => {

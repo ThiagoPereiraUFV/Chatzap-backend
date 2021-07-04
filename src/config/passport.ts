@@ -14,7 +14,7 @@ export const passportJwt = new jwtStrategy({
 		if(user) {
 			return done(null, user);
 		} else {
-			return done(false);
+			return done(true);
 		}
 	}).catch((error) => {
 		return done(error, false);

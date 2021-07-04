@@ -61,7 +61,7 @@ export default {
 		}
 	},
 	async updateUser(req: Request, res: Response, next: NextFunction) {
-		const userId = req.headers.authorization;
+		const userId = req.body.user.id;
 		const { name, phone } = req.body;
 		const errors: string[] = [];
 
@@ -84,7 +84,7 @@ export default {
 		}
 	},
 	async updateUserImage(req: Request, res: Response, next: NextFunction) {
-		const userId = req.headers.authorization;
+		const userId = req.body.user.id;
 		const filename = (req.file) ? req.file.filename : null;
 		const errors = [];
 
@@ -115,7 +115,7 @@ export default {
 	},
 	async deleteUser(req: Request, res: Response, next: NextFunction) {
 		const { password } = req.headers;
-		const userId = req.headers.authorization;
+		const userId = req.body.user.id;
 		const errors: string[] = [];
 
 		if(!userId || !userId.length || !mongoose.isValidObjectId(userId)) {
@@ -133,7 +133,7 @@ export default {
 		}
 	},
 	async createRoom(req: Request, res: Response, next: NextFunction) {
-		const userId = req.headers.authorization;
+		const userId = req.body.user.id;
 		const { name } = req.body;
 		const errors: string[] = [];
 
@@ -154,7 +154,7 @@ export default {
 		}
 	},
 	async updateRoom(req: Request, res: Response, next: NextFunction) {
-		const userId = req.headers.authorization;
+		const userId = req.body.user.id;
 		const roomId = req.params.id;
 		const { name } = req.body;
 		const errors: string[] = [];
@@ -178,7 +178,7 @@ export default {
 		}
 	},
 	async updateRoomImage(req: Request, res: Response, next: NextFunction) {
-		const userId = req.headers.authorization;
+		const userId = req.body.user.id;
 		const roomId = req.params.id;
 		const filename = (req.file) ? req.file.filename : null;
 		const errors = [];
@@ -213,7 +213,7 @@ export default {
 		}
 	},
 	async deleteRoom(req: Request, res: Response, next: NextFunction) {
-		const userId = req.headers.authorization;
+		const userId = req.body.user.id;
 		const roomId = req.params.id;
 		const errors: string[] = [];
 
@@ -232,7 +232,7 @@ export default {
 		}
 	},
 	async searchRoom(req: Request, res: Response, next: NextFunction) {
-		const userId = req.headers.authorization;
+		const userId = req.body.user.id;
 		const query = req.query.q;
 		const errors: string[] = [];
 
@@ -251,7 +251,7 @@ export default {
 		}
 	},
 	async createUserRoom(req: Request, res: Response, next: NextFunction) {
-		const userId = req.headers.authorization;
+		const userId = req.body.user.id;
 		const roomId = req.params.id;
 		const errors: string[] = [];
 
@@ -274,7 +274,7 @@ export default {
 		}
 	},
 	async deleteUserRoom(req: Request, res: Response, next: NextFunction) {
-		const userId = req.headers.authorization;
+		const userId = req.body.user.id;
 		const roomId = req.params.id;
 		const errors: string[] = [];
 
