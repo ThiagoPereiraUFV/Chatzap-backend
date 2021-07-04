@@ -1,6 +1,5 @@
 //  Importing express, mongoose, JWT resources and env
 import { Request, Response } from "express";
-import mongoose from "mongoose";
 import { sign } from "jsonwebtoken";
 import { SECRET } from "../config/env";
 
@@ -11,21 +10,7 @@ import UsersRepository from "../repositories/UsersRepository";
 class SessionController {
 	//	Return user info from current session
 	async index(req: Request, res: Response) {
-		const userId = req.headers.authorization;
-
-		if(!userId || !userId.length || !mongoose.isValidObjectId(userId)) {
-			return res.status(400).send("Invalid id!");
-		}
-
-		await UsersRepository.findById(userId).then((user) => {
-			if(user) {
-				return res.status(200).json(user);
-			} else {
-				return res.status(404).send("User not found, try again!");
-			}
-		}).catch((error) => {
-			return res.status(500).send(error);
-		});
+		return res.status(200).json(req.user);
 	}
 
 	//	Create a new session from user data

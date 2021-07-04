@@ -2,13 +2,21 @@
 import { Strategy as jwtStrategy, ExtractJwt } from "passport-jwt";
 import { SECRET } from "./env";
 
+//	Importing Users repository
+import UsersRepository from "../repositories/UsersRepository";
+
+
 export const passportJwt = new jwtStrategy({
 	jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
 	secretOrKey: SECRET
-}, async (payload, done) => {
-	try {
-		done(null, payload.userId);
-	} catch(error) {
-		done(error, false);
-	}
+}, async ({ userId }, done) => {
+	await UsersRepository.findById(userId).then((user) => {
+		if(user) {
+			return done(null, user);
+		} else {
+			return done(false);
+		}
+	}).catch((error) => {
+		return done(error, false);
+	});
 });
