@@ -182,7 +182,7 @@ class RoomController {
 	//	Return a list of rooms containing a specific word
 	async search(req: Request, res: Response) {
 		const userId = req.body.user.id;
-		const query = req.query.q;
+		const query = req.query.q?.toString();
 
 		if(!userId || !userId.length || !isValidObjectId(userId)) {
 			return res.status(400).send("Invalid id!");
@@ -192,7 +192,7 @@ class RoomController {
 			return res.status(400).send("Invalid query!");
 		}
 
-		await RoomsRepository.find(userId, <string>query).then((response) => {
+		await RoomsRepository.find(userId, query).then((response) => {
 			if(response) {
 				return res.status(200).json(response);
 			} else {

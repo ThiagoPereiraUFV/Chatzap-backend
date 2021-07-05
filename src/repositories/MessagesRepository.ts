@@ -23,10 +23,10 @@ class MessagesRepository {
 		});
 	}
 
-	public async find(roomId: string | undefined, query: string | undefined) {
+	public async find(roomId: string | undefined, query: string) {
 		return await messages.find({
 			roomId,
-			text: new RegExp(<string>query, "iu")
+			text: new RegExp(query, "iu")
 		}).sort({
 			creationDate: "desc"
 		});

@@ -150,7 +150,7 @@ class UserController {
 
 	//	Remove user
 	async delete(req: Request, res: Response) {
-		const { password } = req.body;
+		const password = req.body.password?.toString();
 		const userId = req.body.user.id;
 
 		if(!userId || !userId.length || !isValidObjectId(userId)) {
@@ -159,7 +159,7 @@ class UserController {
 
 		await UsersRepository.findById(userId).then((user) => {
 			if(user) {
-				if(user.comparePassword(<string>password)) {
+				if(user.comparePassword(password)) {
 					user.remove().then(() => {
 						if(user.image && user.image.length) {
 							deleteFile(userUploads(user.image));

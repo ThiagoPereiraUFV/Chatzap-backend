@@ -39,13 +39,13 @@ class UsersRoomsRepository {
 		}).populate("roomId").populate("userId");
 	}
 
-	public async find(userId: string | undefined, query: string | undefined) {
+	public async find(userId: string | undefined, query: string) {
 		return await usersRooms.find({
 			userId
 		}).populate({
 			path: "roomId",
 			match: {
-				name: new RegExp(<string>query, "iu")
+				name: new RegExp(query, "iu")
 			}
 		}).sort({
 			creationDate: "desc"

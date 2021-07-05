@@ -31,10 +31,10 @@ class RoomsRepository {
 		}).populate("userId");
 	}
 
-	public async find(userId: string | undefined, query: string | undefined) {
+	public async find(userId: string | undefined, query: string) {
 		return await rooms.find({
 			userId,
-			name: new RegExp(<string>query, "iu")
+			name: new RegExp(query, "iu")
 		}).sort({
 			name: "asc",
 			creationDate: "desc"
