@@ -1,6 +1,6 @@
 //  Importing express, mongoose and JWT resources
 import { Request, Response } from "express";
-import mongoose from "mongoose";
+import { isValidObjectId } from "mongoose";
 
 //	Importing Rooms repository
 import RoomsRepository from "../repositories/RoomsRepository";
@@ -14,9 +14,9 @@ import { roomUploads } from "../helpers/paths";
 class RoomController {
 	//	Return user rooms
 	async index(req: Request, res: Response) {
-		const userId = req.headers.authorization;
+		const userId = req.body.user.id;
 
-		if(!userId || !userId.length || !mongoose.isValidObjectId(userId)) {
+		if(!userId || !userId.length || !isValidObjectId(userId)) {
 			return res.status(400).send("Invalid id!");
 		}
 
@@ -33,10 +33,14 @@ class RoomController {
 
 	//	Create a new room
 	async create(req: Request, res: Response) {
-		const userId = req.headers.authorization;
+		const userId = req.body.user.id;
 		const { name } = req.body;
 
-		RoomsRepository.create({
+		if(!userId || !userId.length || !isValidObjectId(userId)) {
+			return res.status(400).send("Invalid id!");
+		}
+
+		await RoomsRepository.create({
 			userId,
 			name: name.trim(),
 			nMembers: 1
@@ -64,11 +68,19 @@ class RoomController {
 
 	//	Update room
 	async update(req: Request, res: Response) {
-		const userId = req.headers.authorization;
+		const userId = req.body.user.id;
 		const roomId = req.params.id;
 		const { name } = req.body;
 
-		RoomsRepository.update(roomId, userId, {
+		if(!userId || !userId.length || !isValidObjectId(userId)) {
+			return res.status(400).send("Invalid id!");
+		}
+
+		if(!roomId || !roomId.length || !isValidObjectId(roomId)) {
+			return res.status(400).send("Invalid id!");
+		}
+
+		await RoomsRepository.update(roomId, userId, {
 			name: name.trim()
 		}).then((response) => {
 			if(response) {
@@ -83,9 +95,27 @@ class RoomController {
 
 	//	Update room image
 	async updateImage(req: Request, res: Response) {
-		const userId = req.headers.authorization;
+		const userId = req.body.user.id;
 		const roomId = req.params.id;
 		const filename = (req.file) ? req.file.filename : "";
+
+		if(filename) {
+			const mimeType = (req?.file?.mimetype) ? req?.file?.mimetype.split("/")[0] : null;
+
+			if(!mimeType || !mimeType.length || (mimeType !== "image")) {
+				return res.status(400).send("Invalid image type!");
+			}
+		} else {
+			return res.status(400).send("Invalid image!");
+		}
+
+		if(!userId || !userId.length || !isValidObjectId(userId)) {
+			return res.status(400).send("Invalid id!");
+		}
+
+		if(!roomId || !roomId.length || !isValidObjectId(roomId)) {
+			return res.status(400).send("Invalid id!");
+		}
 
 		await RoomsRepository.findByIds(roomId, userId).then((room) => {
 			if(room) {
@@ -123,8 +153,16 @@ class RoomController {
 
 	//	Remove room
 	async delete(req: Request, res: Response) {
-		const userId = req.headers.authorization;
+		const userId = req.body.user.id;
 		const roomId = req.params.id;
+
+		if(!userId || !userId.length || !isValidObjectId(userId)) {
+			return res.status(400).send("Invalid id!");
+		}
+
+		if(!roomId || !roomId.length || !isValidObjectId(roomId)) {
+			return res.status(400).send("Invalid id!");
+		}
 
 		await RoomsRepository.delete(roomId, userId).then((room) => {
 			if(room) {
@@ -143,10 +181,18 @@ class RoomController {
 
 	//	Return a list of rooms containing a specific word
 	async search(req: Request, res: Response) {
-		const userId = req.headers.authorization;
-		const query = req.query.q;
+		const userId = req.body.user.id;
+		const query = req.query.q?.toString();
 
-		await RoomsRepository.find(userId, <string>query).then((response) => {
+		if(!userId || !userId.length || !isValidObjectId(userId)) {
+			return res.status(400).send("Invalid id!");
+		}
+
+		if(!query || !query.length) {
+			return res.status(400).send("Invalid query!");
+		}
+
+		await RoomsRepository.find(userId, query).then((response) => {
 			if(response) {
 				return res.status(200).json(response);
 			} else {
@@ -169,7 +215,7 @@ class RoomController {
 			return res.status(500).send(error);
 		});
 	}
-};
+}
 
 //	Exporting Room controller
 export default new RoomController();

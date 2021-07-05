@@ -10,7 +10,7 @@ class UsersRoomsRepository {
 			populate: {
 				path: "userId"
 			}
-	 });
+		});
 	}
 
 	public async findByUserId(userId: string) {
@@ -21,7 +21,7 @@ class UsersRoomsRepository {
 		return await usersRooms.find({ roomId }).populate("userId");
 	}
 
-	public async create(userRoom: object) {
+	public async create(userRoom: Record<string, unknown>) {
 		return await usersRooms.create(userRoom);
 	}
 
@@ -39,13 +39,13 @@ class UsersRoomsRepository {
 		}).populate("roomId").populate("userId");
 	}
 
-	public async find(userId: string | undefined, query: string | undefined) {
+	public async find(userId: string | undefined, query: string) {
 		return await usersRooms.find({
 			userId
 		}).populate({
 			path: "roomId",
 			match: {
-				name: new RegExp(<string>query, "i")
+				name: new RegExp(query, "iu")
 			}
 		}).sort({
 			creationDate: "desc"

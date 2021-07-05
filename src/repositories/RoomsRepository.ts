@@ -1,7 +1,7 @@
 import rooms from "../models/Room";
 
 class RoomsRepository {
-	public async create(room: object) {
+	public async create(room: Record<string, unknown>) {
 		return await rooms.create(room);
 	}
 
@@ -31,17 +31,17 @@ class RoomsRepository {
 		}).populate("userId");
 	}
 
-	public async find(userId: string | undefined, query: string | undefined) {
+	public async find(userId: string | undefined, query: string) {
 		return await rooms.find({
 			userId,
-			name: new RegExp(<string>query, "i")
+			name: new RegExp(query, "iu")
 		}).sort({
 			name: "asc",
 			creationDate: "desc"
 		});
 	}
 
-	public async update(_id: string | undefined, userId: string | undefined, room: object) {
+	public async update(_id: string | undefined, userId: string | undefined, room: Record<string, unknown>) {
 		return await rooms.findOneAndUpdate({ _id, userId }, room);
 	}
 

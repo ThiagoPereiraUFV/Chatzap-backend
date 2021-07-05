@@ -4,7 +4,7 @@ import request from "supertest";
 import app from "../app";
 
 //	Test variables
-var userToken = "";
+let userToken = "";
 const username = Math.random().toString(36).substr(2, 9);
 const phone = Math.floor(Math.random()*(10**11)).toString();
 
@@ -18,8 +18,8 @@ describe("Session", () => {
 	test("Should be able to create a user", async () => {
 		return await request(app).post("/user").send({
 			name: "User Session Example",
-			phone: phone,
-			email: username + ".session@example.com",
+			phone,
+			email: `${username}.session@example.com`,
 			password: "password",
 			passwordC: "password"
 		}).expect(201).then((response) => userToken = response.body.token);
@@ -27,22 +27,23 @@ describe("Session", () => {
 
 	test("Should be able to create a session", async () => {
 		await request(app).post("/session").send({
-			phone: phone,
+			phone,
 			password: "password"
 		}).set({
-			Authorization: "Bearer " + userToken
+			Authorization: `Bearer ${userToken}`
 		}).expect(201).then((response) => userToken = response.body.token);
 	});
 
 	test("Should be able to get a session", async () => {
 		await request(app).get("/session").set({
-			Authorization: "Bearer " + userToken
+			Authorization: `Bearer ${userToken}`
 		}).expect(200);
 	});
 
 	test("Should be able to delete user", async () => {
 		return await request(app).delete("/user").set({
-			Authorization: "Bearer " + userToken,
+			Authorization: `Bearer ${userToken}`
+		}).send({
 			password: "password"
 		}).expect(200);
 	});

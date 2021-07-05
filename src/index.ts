@@ -1,12 +1,10 @@
-//	Importing app resources
+//	Importing app resources and env
 import app from "./app";
-
-//	Defining port
-const PORT = process.env.PORT || 4000;
+import { PORT } from "./config/env";
 
 //	Listening on given port
 app.listen(PORT, () => {
-	console.log(`Server is running on port ${PORT}`)
+	console.log(`Server is running on port ${PORT}`);
 }).on("error", (error) => {
 	console.error(`Error on port:  ${PORT} \n`, error);
 });

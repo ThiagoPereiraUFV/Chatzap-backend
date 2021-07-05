@@ -1,6 +1,6 @@
 //  Importing express, mongoose and JWT resources
 import { Request, Response } from "express";
-import mongoose from "mongoose";
+import { isValidObjectId } from "mongoose";
 
 //	Importing UsersRooms repository
 import UsersRoomsRepository from "../repositories/UsersRoomsRepository";
@@ -10,9 +10,9 @@ import RoomsRepository from "../repositories/RoomsRepository";
 class UserRoomController {
 	//	Return user room relationships from user
 	async index(req: Request, res: Response) {
-		const userId = req.headers.authorization;
+		const userId = req.body.user.id;
 
-		if(!userId || !userId.length || !mongoose.isValidObjectId(userId)) {
+		if(!userId || !userId.length || !isValidObjectId(userId)) {
 			return res.status(400).send("Invalid id!");
 		}
 
@@ -29,14 +29,14 @@ class UserRoomController {
 
 	//	Return only one user room relationships from user
 	async room(req: Request, res: Response) {
-		const userId = req.headers.authorization;
+		const userId = req.body.user.id;
 		const roomId = req.params.id;
 
-		if(!userId || !userId.length || !mongoose.isValidObjectId(userId)) {
+		if(!userId || !userId.length || !isValidObjectId(userId)) {
 			return res.status(400).send("Invalid id!");
 		}
 
-		if(!roomId || !roomId.length || !mongoose.isValidObjectId(roomId)) {
+		if(!roomId || !roomId.length || !isValidObjectId(roomId)) {
 			return res.status(400).send("Invalid id!");
 		}
 
@@ -53,17 +53,29 @@ class UserRoomController {
 
 	//	Create a new user room relationship
 	async create(req: Request, res: Response) {
-		const userId = req.headers.authorization;
+		const userId = req.body.user.id;
 		const roomId = req.params.id;
 
-		UsersRoomsRepository.create({
+		if(!userId || !userId.length || !isValidObjectId(userId)) {
+			return res.status(400).send("Invalid id!");
+		}
+
+		if(!roomId || !roomId.length || !isValidObjectId(roomId)) {
+			return res.status(400).send("Invalid id!");
+		}
+
+		if(await UsersRoomsRepository.findByIds(userId, roomId)) {
+			return res.status(400).send("Invalid operation!");
+		}
+
+		await UsersRoomsRepository.create({
 			userId,
 			roomId
 		}).then((userRoom) => {
 			if(userRoom) {
 				RoomsRepository.findById(roomId).then((room) => {
 					if(room) {
-						room.nMembers = room.nMembers+1;
+						room.nMembers += 1;
 
 						room.save().then((response) => {
 							if(response) {
@@ -90,14 +102,22 @@ class UserRoomController {
 
 	//	Remove user room relationship
 	async delete(req: Request, res: Response) {
-		const userId = req.headers.authorization;
+		const userId = req.body.user.id;
 		const roomId = req.params.id;
+
+		if(!userId || !userId.length || !isValidObjectId(userId)) {
+			return res.status(400).send("Invalid id!");
+		}
+
+		if(!roomId || !roomId.length || !isValidObjectId(roomId)) {
+			return res.status(400).send("Invalid id!");
+		}
 
 		await UsersRoomsRepository.delete(userId, roomId).then((userRoom) => {
 			if(userRoom) {
 				RoomsRepository.findById(roomId).then((room) => {
 					if(room) {
-						room.nMembers = room.nMembers-1;
+						room.nMembers -= 1;
 
 						room.save().then((response) => {
 							if(response) {
@@ -126,7 +146,7 @@ class UserRoomController {
 	async allRoomUsers(req: Request, res: Response) {
 		const roomId = req.params.id;
 
-		if(!roomId || !roomId.length || !mongoose.isValidObjectId(roomId)) {
+		if(!roomId || !roomId.length || !isValidObjectId(roomId)) {
 			return res.status(400).send("Invalid id!");
 		}
 
@@ -143,10 +163,18 @@ class UserRoomController {
 
 	//	Return a list of rooms containing a specific word
 	async search(req: Request, res: Response) {
-		const userId = req.headers.authorization;
-		const query = req.query.q;
+		const userId = req.body.user.id;
+		const query = req.query.q?.toString();
 
-		await UsersRoomsRepository.find(userId, <string>query).then((response) => {
+		if(!userId || !userId.length || !isValidObjectId(userId)) {
+			return res.status(400).send("Invalid id!");
+		}
+
+		if(!query || !query.length) {
+			return res.status(400).send("Invalid query!");
+		}
+
+		await UsersRoomsRepository.find(userId, query).then((response) => {
 			if(response) {
 				return res.status(200).json(response);
 			} else {
@@ -169,7 +197,7 @@ class UserRoomController {
 			return res.status(500).send(error);
 		});
 	}
-};
+}
 
 //	Exporting User Room controller
 export default new UserRoomController();

@@ -10,4 +10,4 @@ export interface Room extends Document {
 	image?: string,
 	createdAt: Date,
 	updatedAt: Date
-};
+}

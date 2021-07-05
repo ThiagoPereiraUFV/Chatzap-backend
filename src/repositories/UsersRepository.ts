@@ -5,11 +5,11 @@ class UsersRepository {
 		return await users.findById(id);
 	}
 
-	public async findByPhone(phone: string | undefined) {
-		return await users.findOne({ phone: (<string>phone).trim() });
+	public async findByPhone(phone: string) {
+		return await users.findOne({ phone: phone.trim() });
 	}
 
-	public async create(user: object) {
+	public async create(user: Record<string, unknown>) {
 		return await users.create(user);
 	}
 

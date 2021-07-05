@@ -9,7 +9,7 @@ class MessagesRepository {
 		return await messages.find({ roomId }).populate("userId");
 	}
 
-	public async create(message: object) {
+	public async create(message: Record<string, unknown>) {
 		return await messages.create(message);
 	}
 
@@ -23,10 +23,10 @@ class MessagesRepository {
 		});
 	}
 
-	public async find(roomId: string | undefined, query: string | undefined) {
+	public async find(roomId: string | undefined, query: string) {
 		return await messages.find({
 			roomId,
-			text: new RegExp(<string>query, "i")
+			text: new RegExp(query, "iu")
 		}).sort({
 			creationDate: "desc"
 		});

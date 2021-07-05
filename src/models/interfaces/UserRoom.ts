@@ -7,4 +7,4 @@ export interface UserRoom extends Document {
 	roomId: Types.ObjectId | any,
 	createdAt: Date,
 	updatedAt: Date
-};
+}

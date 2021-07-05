@@ -1,7 +1,8 @@
-//  Importing express, mongoose and JWT resources
+//  Importing express, mongoose, JWT resources and env
 import { Request, Response } from "express";
-import mongoose from "mongoose";
-import jwt from "jsonwebtoken";
+import { sign } from "jsonwebtoken";
+import { isValidObjectId } from "mongoose";
+import { SECRET } from "../config/env";
 
 //	Importing Users repository
 import UsersRepository from "../repositories/UsersRepository";
@@ -15,21 +16,7 @@ import { userUploads } from "../helpers/paths";
 class UserController {
 	//	Return an user on database given id
 	async index(req: Request, res: Response) {
-		const userId = req.headers.authorization;
-
-		if(!userId || !userId.length || !mongoose.isValidObjectId(userId)) {
-			return res.status(400).send("Invalid id!");
-		}
-
-		await UsersRepository.findById(userId).then((user) => {
-			if(user) {
-				return res.status(200).json(user);
-			} else {
-				return res.status(404).send("User not found!");
-			}
-		}).catch((error) => {
-			return res.status(500).send(error);
-		});
+		return res.status(200).json(req.body.user);
 	}
 
 	//	Create a new user
@@ -47,8 +34,8 @@ class UserController {
 					password
 				}).then((user) => {
 					if(user) {
-						const token = jwt.sign({ userId: user._id }, <string>process.env.SECRET, {
-							expiresIn: 86400
+						const token = sign({ userId: user._id }, SECRET, {
+							expiresIn: "1d"
 						});
 
 						return res.status(201).json({ user, token });
@@ -66,11 +53,11 @@ class UserController {
 
 	//	Update user
 	async update(req: Request, res: Response) {
-		const userId = req.headers.authorization;
+		const userId = req.body.user.id;
 		const { name, phone, email, passwordO, passwordN } = req.body;
 
 		await UsersRepository.findByPhone(phone).then((response) => {
-			if(response && (response._id != userId)) {
+			if(response && (response._id.toString() !== userId)) {
 				return res.status(400).send("This phone isn't available, try another!");
 			} else {
 				UsersRepository.findById(userId).then((user) => {
@@ -87,9 +74,9 @@ class UserController {
 							}
 						}
 
-						user.save().then((response) => {
-							if(response) {
-								return res.status(200).send("Successful on updating your data!");
+						user.save().then((updatedUser) => {
+							if(updatedUser) {
+								return res.status(200).send(updatedUser);
 							} else {
 								return res.status(400).send("We couldn't save your changes, try again later!");
 							}
@@ -110,8 +97,22 @@ class UserController {
 
 	//	Update user image
 	async updateImage(req: Request, res: Response) {
-		const userId = req.headers.authorization;
+		const userId = req.body.user.id;
 		const filename = (req.file) ? req.file.filename : "";
+
+		if(filename) {
+			const mimeType = (req?.file?.mimetype) ? req?.file?.mimetype.split("/")[0] : null;
+
+			if(!mimeType || !mimeType.length || (mimeType !== "image")) {
+				return res.status(400).send("Invalid image type!");
+			}
+		} else {
+			return res.status(400).send("Invalid image!");
+		}
+
+		if(!userId || !userId.length || !isValidObjectId(userId)) {
+			return res.status(400).send("Invalid id!");
+		}
 
 		await UsersRepository.findById(userId).then((user) => {
 			if(user) {
@@ -149,11 +150,16 @@ class UserController {
 
 	//	Remove user
 	async delete(req: Request, res: Response) {
-		const { authorization: userId, password } = req.headers;
+		const password = req.body.password?.toString();
+		const userId = req.body.user.id;
+
+		if(!userId || !userId.length || !isValidObjectId(userId)) {
+			return res.status(400).send("Invalid id!");
+		}
 
 		await UsersRepository.findById(userId).then((user) => {
 			if(user) {
-				if(user.comparePassword(<string>password)) {
+				if(user.comparePassword(password)) {
 					user.remove().then(() => {
 						if(user.image && user.image.length) {
 							deleteFile(userUploads(user.image));
@@ -194,7 +200,7 @@ class UserController {
 			return res.status(500).send(error);
 		});
 	}
-};
+}
 
 //	Exporting User controller
 export default new UserController();

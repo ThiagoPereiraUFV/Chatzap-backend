@@ -23,7 +23,7 @@ const UserSchema = new Schema<User>({
 	},
 	password: {
 		type: String,
-		set: (p: String) => bcrypt.hashSync(p, bcrypt.genSaltSync(10)),
+		set: (p: string) => bcrypt.hashSync(p, bcrypt.genSaltSync(10)),
 		required: true
 	},
 	online: {
@@ -41,11 +41,11 @@ const UserSchema = new Schema<User>({
 
 UserSchema.methods.comparePassword = function(password: string) {
 	if(password && password.length) {
-			return bcrypt.compareSync(password, this.password);
+		return bcrypt.compareSync(password, this.password);
 	} else {
 		return false;
 	}
-}
+};
 
 //	Creating collection Users on database if does not exist
 export default model<User>("Users", UserSchema);

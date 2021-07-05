@@ -34,6 +34,8 @@ This project was built using following technologies:
 - [socket.io](https://socket.io/)
 - [jest](https://jestjs.io/)
 - [jwt](https://jwt.io/)
+- [Passport](https://www.passportjs.org/)
+- [joi](https://joi.dev/)
 - [mongoose](https://mongoosejs.com/)
 - [bcrypt](https://yarnpkg.com/package/bcrypt)
 - [cors](https://yarnpkg.com/package/cors)
