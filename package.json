@@ -1,5 +1,5 @@
 {
-  "name": "chatzap",
+  "name": "chatzap-backend",
   "version": "0.0.0",
   "description": "System to chat with friends",
   "main": "src/index.ts",
