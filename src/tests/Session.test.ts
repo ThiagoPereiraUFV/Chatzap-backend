@@ -42,7 +42,8 @@ describe("Session", () => {
 
 	test("Should be able to delete user", async () => {
 		return await request(app).delete("/user").set({
-			Authorization: `Bearer ${userToken}`,
+			Authorization: `Bearer ${userToken}`
+		}).send({
 			password: "password"
 		}).expect(200);
 	});

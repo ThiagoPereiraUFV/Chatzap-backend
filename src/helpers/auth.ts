@@ -9,6 +9,8 @@ export async function authJWT(req: Request, res: Response, next: NextFunction) {
 	authenticate(passportJwt, (error, user: User, info) => {
 		if(info) {
 			return res.status(401).send("Invalid token!");
+		} else if(!user) {
+			return res.status(404).send("User not found!");
 		} else {
 			req.body.user = user;
 

@@ -95,21 +95,24 @@ describe("User", () => {
 
 	test("Should not be able to delete first created user using wrong password", async () => {
 		await request(app).delete("/user").set({
-			Authorization: `Bearer ${userToken[0]}`,
+			Authorization: `Bearer ${userToken[0]}`
+		}).send({
 			password: "password"
 		}).expect(400);
 	});
 
 	test("Should be able to delete first created user", async () => {
 		await request(app).delete("/user").set({
-			Authorization: `Bearer ${userToken[0]}`,
+			Authorization: `Bearer ${userToken[0]}`
+		}).send({
 			password: "password1"
 		}).expect(200);
 	});
 
 	test("Should be able to delete second created user", async () => {
 		await request(app).delete("/user").set({
-			Authorization: `Bearer ${userToken[1]}`,
+			Authorization: `Bearer ${userToken[1]}`
+		}).send({
 			password: "password"
 		}).expect(200);
 	});

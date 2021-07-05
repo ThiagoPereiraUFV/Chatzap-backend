@@ -1,6 +1,7 @@
 //  Importing express, mongoose, JWT resources and env
 import { Request, Response } from "express";
 import { sign } from "jsonwebtoken";
+import { isValidObjectId } from "mongoose";
 import { SECRET } from "../config/env";
 
 //	Importing Users repository
@@ -99,6 +100,20 @@ class UserController {
 		const userId = req.body.user.id;
 		const filename = (req.file) ? req.file.filename : "";
 
+		if(filename) {
+			const mimeType = (req?.file?.mimetype) ? req?.file?.mimetype.split("/")[0] : null;
+
+			if(!mimeType || !mimeType.length || (mimeType !== "image")) {
+				return res.status(400).send("Invalid image type!");
+			}
+		} else {
+			return res.status(400).send("Invalid image!");
+		}
+
+		if(!userId || !userId.length || !isValidObjectId(userId)) {
+			return res.status(400).send("Invalid id!");
+		}
+
 		await UsersRepository.findById(userId).then((user) => {
 			if(user) {
 				const deleteImage = user.image;
@@ -135,8 +150,12 @@ class UserController {
 
 	//	Remove user
 	async delete(req: Request, res: Response) {
-		const { password } = req.headers;
+		const { password } = req.body;
 		const userId = req.body.user.id;
+
+		if(!userId || !userId.length || !isValidObjectId(userId)) {
+			return res.status(400).send("Invalid id!");
+		}
 
 		await UsersRepository.findById(userId).then((user) => {
 			if(user) {

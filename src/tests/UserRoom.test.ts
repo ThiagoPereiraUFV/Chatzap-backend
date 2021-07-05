@@ -112,14 +112,16 @@ describe("User Room", () => {
 
 	test("Should be able to delete first user", async () => {
 		await request(app).delete("/user").set({
-			Authorization: `Bearer ${userToken[0]}`,
+			Authorization: `Bearer ${userToken[0]}`
+		}).send({
 			password: "password"
 		}).expect(200);
 	});
 
 	test("Should be able to delete second user", async () => {
 		await request(app).delete("/user").set({
-			Authorization: `Bearer ${userToken[1]}`,
+			Authorization: `Bearer ${userToken[1]}`
+		}).send({
 			password: "password"
 		}).expect(200);
 	});

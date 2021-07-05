@@ -103,7 +103,8 @@ describe("Room", () => {
 
 	test("Should be able to delete user", async () => {
 		await request(app).delete("/user").set({
-			Authorization: `Bearer ${userToken}`,
+			Authorization: `Bearer ${userToken}`
+		}).send({
 			password: "password"
 		}).expect(200);
 	});

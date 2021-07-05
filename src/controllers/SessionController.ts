@@ -26,10 +26,10 @@ class SessionController {
 
 					return res.status(201).json({ user, token });
 				} else {
-					return res.status(400).send("Wrong password, try again!");
+					return res.status(400).send("Wrong user or password, try again!");
 				}
 			} else {
-				return res.status(404).send("User not found using this phone, try again!");
+				return res.status(404).send("Wrong user or password, try again!");
 			}
 		}).catch((error) => {
 			return res.status(500).send(error);
