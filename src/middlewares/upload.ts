@@ -1,4 +1,6 @@
+//	Importing express resources
 import { NextFunction, Request, Response } from "express";
+
 //	Importing multer and path resources
 import multer from "multer";
 import path from "path";

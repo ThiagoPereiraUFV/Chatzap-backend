@@ -1,10 +1,10 @@
-//  Importing express, mongoose, JWT resources and env
+//  Importing express, mongoose, JWT and env resources
 import { Request, Response } from "express";
 import { sign } from "jsonwebtoken";
 import { isValidObjectId } from "mongoose";
 import { SECRET } from "../config/env";
 
-//	Importing Users repository
+//	Importing repositories
 import UsersRepository from "../repositories/UsersRepository";
 import UsersRoomsRepository from "../repositories/UsersRoomsRepository";
 

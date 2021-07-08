@@ -1,8 +1,8 @@
-//  Importing express, mongoose and JWT resources
+//  Importing express and mongoose resources
 import { Request, Response } from "express";
 import { isValidObjectId } from "mongoose";
 
-//	Importing Rooms repository
+//	Importing repositories
 import RoomsRepository from "../repositories/RoomsRepository";
 import UsersRoomsRepository from "../repositories/UsersRoomsRepository";
 

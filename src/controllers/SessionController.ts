@@ -1,4 +1,4 @@
-//  Importing express, mongoose, JWT resources and env
+//  Importing express, JWT and env resources
 import { Request, Response } from "express";
 import { sign } from "jsonwebtoken";
 import { SECRET } from "../config/env";

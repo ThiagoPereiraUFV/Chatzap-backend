@@ -5,7 +5,6 @@ import { SECRET } from "./env";
 //	Importing Users repository
 import UsersRepository from "../repositories/UsersRepository";
 
-
 export const passportJwt = new JWTStrategy({
 	jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
 	secretOrKey: SECRET

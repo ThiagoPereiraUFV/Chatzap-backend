@@ -1,12 +1,12 @@
-//  Importing express, mongoose and JWT resources
+//  Importing express and mongoose resources
 import { Request, Response } from "express";
 import { isValidObjectId } from "mongoose";
 
-//	Importing UsersRooms repository
+//	Importing repositories
 import UsersRoomsRepository from "../repositories/UsersRoomsRepository";
 import RoomsRepository from "../repositories/RoomsRepository";
 
-//	User user room features
+//	User room features
 class UserRoomController {
 	//	Return user room relationships from user
 	async index(req: Request, res: Response) {

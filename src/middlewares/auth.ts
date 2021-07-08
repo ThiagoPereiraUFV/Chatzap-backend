@@ -1,9 +1,11 @@
-//	Importing express resources
+//	Importing express and passport resources
 import { NextFunction, Request, Response } from "express";
 
 import { authenticate } from "passport";
-import { User } from "../models/interfaces/User";
 import { passportJwt } from "../config/passport";
+
+//	Importing User type
+import { User } from "../models/interfaces/User";
 
 export async function authJWT(req: Request, res: Response, next: NextFunction) {
 	authenticate(passportJwt, (error, user: User, info) => {

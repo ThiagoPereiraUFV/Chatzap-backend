@@ -1,4 +1,4 @@
-//  Requiring database
+//  Importing mongoose resources
 import { Schema, Types, model } from "mongoose";
 import { UserRoom } from "./interfaces/UserRoom";
 

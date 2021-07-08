@@ -1,5 +1,5 @@
+//  Importing express and Joi resources
 import { NextFunction, Request, Response } from "express";
-
 import Joi, { ObjectSchema, object } from "joi";
 
 export const validateBody = (schema: ObjectSchema) => {
