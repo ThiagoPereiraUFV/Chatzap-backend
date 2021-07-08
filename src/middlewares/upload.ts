@@ -15,7 +15,7 @@ export async function roomUpload(req: Request, res: Response, next: NextFunction
 				const mimeType = (file.mimetype) ? file.mimetype?.split("/")[0] : null;
 
 				if(!mimeType || !mimeType.length || (mimeType !== "image")) {
-					return res.status(400).send("Invalid image type!");
+					return res.status(400).json({ error: "Invalid image type!" });
 				} else {
 					return callback(null, `room-${Date.now()}${ext}`);
 				}
@@ -34,7 +34,7 @@ export async function userUpload(req: Request, res: Response, next: NextFunction
 				const mimeType = (file.mimetype) ? file.mimetype?.split("/")[0] : null;
 
 				if(!mimeType || !mimeType.length || (mimeType !== "image")) {
-					return res.status(400).send("Invalid image type!");
+					return res.status(400).json({ error: "Invalid image type!" });
 				} else {
 					return callback(null, `user-${Date.now()}${ext}`);
 				}

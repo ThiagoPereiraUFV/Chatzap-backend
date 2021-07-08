@@ -25,7 +25,7 @@ class UserController {
 
 		await UsersRepository.findByPhone(phone).then((response) => {
 			if(response) {
-				return res.status(400).send("This phone isn't available, try another!");
+				return res.status(400).json({ error: "This phone isn't available, try another!" });
 			} else {
 				UsersRepository.create({
 					name: name.trim(),
@@ -40,14 +40,14 @@ class UserController {
 
 						return res.status(201).json({ user, token });
 					} else {
-						return res.status(400).send("We couldn't process your request, try again later!");
+						return res.status(400).json({ error: "We couldn't process your request, try again later!" });
 					}
 				}).catch((error) => {
-					return res.status(500).send(error);
+					return res.status(500).json({ error });
 				});
 			}
 		}).catch((error) => {
-			return res.status(500).send(error);
+			return res.status(500).json({ error });
 		});
 	}
 
@@ -58,7 +58,7 @@ class UserController {
 
 		await UsersRepository.findByPhone(phone).then((response) => {
 			if(response && (response._id.toString() !== userId)) {
-				return res.status(400).send("This phone isn't available, try another!");
+				return res.status(400).json({ error: "This phone isn't available, try another!" });
 			} else {
 				UsersRepository.findById(userId).then((user) => {
 					if(user) {
@@ -68,7 +68,7 @@ class UserController {
 
 						if(passwordN && passwordN.length && passwordO && passwordO.length) {
 							if(!user.comparePassword(passwordO)) {
-								return res.status(400).send("Old password don't match, try again!");
+								return res.status(400).json({ error: "Old password don't match, try again!" });
 							} else {
 								user.password = passwordN;
 							}
@@ -76,22 +76,22 @@ class UserController {
 
 						user.save().then((updatedUser) => {
 							if(updatedUser) {
-								return res.status(200).send(updatedUser);
+								return res.status(200).json(updatedUser);
 							} else {
-								return res.status(400).send("We couldn't save your changes, try again later!");
+								return res.status(400).json({ error: "We couldn't save your changes, try again later!" });
 							}
 						}).catch((error) => {
-							return res.status(500).send(error);
+							return res.status(500).json({ error });
 						});
 					} else {
-						return res.status(404).send("User not found!");
+						return res.status(404).json({ error: "User not found!" });
 					}
 				}).catch((error) => {
-					return res.status(500).send(error);
+					return res.status(500).json({ error });
 				});
 			}
 		}).catch((error) => {
-			return res.status(500).send(error);
+			return res.status(500).json({ error });
 		});
 	}
 
@@ -101,7 +101,7 @@ class UserController {
 		const filename = (req.file) ? req.file.filename : "";
 
 		if(!userId || !userId.length || !isValidObjectId(userId)) {
-			return res.status(400).send("Invalid id!");
+			return res.status(400).json({ error: "Invalid id!" });
 		}
 
 		await UsersRepository.findById(userId).then((user) => {
@@ -119,22 +119,22 @@ class UserController {
 					} else {
 						deleteFile(userUploads(filename));
 
-						return res.status(400).send("Image could not be updated");
+						return res.status(400).json({ error: "Image could not be updated" });
 					}
 				}).catch((error) => {
 					deleteFile(userUploads(filename));
 
-					return res.status(500).send(error);
+					return res.status(500).json({ error });
 				});
 			} else {
 				deleteFile(userUploads(filename));
 
-				return res.status(404).send("User not found!");
+				return res.status(404).json({ error: "User not found!" });
 			}
 		}).catch((error) => {
 			deleteFile(userUploads(filename));
 
-			return res.status(500).send(error);
+			return res.status(500).json({ error });
 		});
 	}
 
@@ -144,7 +144,7 @@ class UserController {
 		const userId = req.body.user.id;
 
 		if(!userId || !userId.length || !isValidObjectId(userId)) {
-			return res.status(400).send("Invalid id!");
+			return res.status(400).json({ error: "Invalid id!" });
 		}
 
 		await UsersRepository.findById(userId).then((user) => {
@@ -157,24 +157,24 @@ class UserController {
 
 						UsersRoomsRepository.deleteAllFromUser(userId).then((response) => {
 							if(response?.ok) {
-								return res.status(200).send("The user has been deleted!");
+								return res.status(200).json({ message: "The user has been deleted!" });
 							} else {
-								return res.status(400).send("We couldn't process your request, try again later!");
+								return res.status(400).json({ error: "We couldn't process your request, try again later!" });
 							}
 						}).catch((error) => {
-							return res.status(500).send(error);
+							return res.status(500).json({ error });
 						});
 					}).catch((error) => {
-						return res.status(500).send(error);
+						return res.status(500).json({ error });
 					});
 				} else {
-					return res.status(400).send("Wrong password!");
+					return res.status(400).json({ error: "Wrong password!" });
 				}
 			} else {
-				return res.status(404).send("User not found!");
+				return res.status(404).json({ error: "User not found!" });
 			}
 		}).catch((error) => {
-			return res.status(500).send(error);
+			return res.status(500).json({ error });
 		});
 	}
 
@@ -184,10 +184,10 @@ class UserController {
 			if(response) {
 				return res.status(200).json(response);
 			} else {
-				return res.status(404).send("Users not found!");
+				return res.status(404).json({ error: "Users not found!" });
 			}
 		}).catch((error) => {
-			return res.status(500).send(error);
+			return res.status(500).json({ error });
 		});
 	}
 }

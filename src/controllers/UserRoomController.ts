@@ -13,17 +13,17 @@ class UserRoomController {
 		const userId = req.body.user.id;
 
 		if(!userId || !userId.length || !isValidObjectId(userId)) {
-			return res.status(400).send("Invalid id!");
+			return res.status(400).json({ error: "Invalid id!" });
 		}
 
 		await UsersRoomsRepository.findByUserId(userId).then((response) => {
 			if(response) {
 				return res.status(200).json(response);
 			} else {
-				return res.status(404).send("User rooms not found!");
+				return res.status(404).json({ error: "User rooms not found!" });
 			}
 		}).catch((error) => {
-			return res.status(500).send(error);
+			return res.status(500).json({ error });
 		});
 	}
 
@@ -33,21 +33,21 @@ class UserRoomController {
 		const roomId = req.params.id;
 
 		if(!userId || !userId.length || !isValidObjectId(userId)) {
-			return res.status(400).send("Invalid id!");
+			return res.status(400).json({ error: "Invalid id!" });
 		}
 
 		if(!roomId || !roomId.length || !isValidObjectId(roomId)) {
-			return res.status(400).send("Invalid id!");
+			return res.status(400).json({ error: "Invalid id!" });
 		}
 
 		await UsersRoomsRepository.findByIds(userId, roomId).then((response) => {
 			if(response) {
 				return res.status(200).json(response);
 			} else {
-				return res.status(404).send("User room not found!");
+				return res.status(404).json({ error: "User room not found!" });
 			}
 		}).catch((error) => {
-			return res.status(500).send(error);
+			return res.status(500).json({ error });
 		});
 	}
 
@@ -57,15 +57,15 @@ class UserRoomController {
 		const roomId = req.params.id;
 
 		if(!userId || !userId.length || !isValidObjectId(userId)) {
-			return res.status(400).send("Invalid id!");
+			return res.status(400).json({ error: "Invalid id!" });
 		}
 
 		if(!roomId || !roomId.length || !isValidObjectId(roomId)) {
-			return res.status(400).send("Invalid id!");
+			return res.status(400).json({ error: "Invalid id!" });
 		}
 
 		if(await UsersRoomsRepository.findByIds(userId, roomId)) {
-			return res.status(400).send("Invalid operation!");
+			return res.status(400).json({ error: "Invalid operation!" });
 		}
 
 		await UsersRoomsRepository.create({
@@ -81,22 +81,22 @@ class UserRoomController {
 							if(response) {
 								return res.status(201).json(userRoom);
 							} else {
-								return res.status(400).send("We couldn't process your request, try again later!");
+								return res.status(400).json({ error: "We couldn't process your request, try again later!" });
 							}
 						}).catch((error) => {
-							return res.status(500).send(error);
+							return res.status(500).json({ error });
 						});
 					} else {
-						return res.status(404).send("Room not found!");
+						return res.status(404).json({ error: "Room not found!" });
 					}
 				}).catch((error) => {
-					return res.status(500).send(error);
+					return res.status(500).json({ error });
 				});
 			} else {
-				return res.status(400).send("We couldn't process your request, try again later!");
+				return res.status(400).json({ error: "We couldn't process your request, try again later!" });
 			}
 		}).catch((error) => {
-			return res.status(500).send(error);
+			return res.status(500).json({ error });
 		});
 	}
 
@@ -106,11 +106,11 @@ class UserRoomController {
 		const roomId = req.params.id;
 
 		if(!userId || !userId.length || !isValidObjectId(userId)) {
-			return res.status(400).send("Invalid id!");
+			return res.status(400).json({ error: "Invalid id!" });
 		}
 
 		if(!roomId || !roomId.length || !isValidObjectId(roomId)) {
-			return res.status(400).send("Invalid id!");
+			return res.status(400).json({ error: "Invalid id!" });
 		}
 
 		await UsersRoomsRepository.delete(userId, roomId).then((userRoom) => {
@@ -121,24 +121,24 @@ class UserRoomController {
 
 						room.save().then((response) => {
 							if(response) {
-								return res.status(200).send("The user room has been deleted!");
+								return res.status(200).json({ message: "The user room has been deleted!" });
 							} else {
-								return res.status(400).send("We couldn't process your request, try again later!");
+								return res.status(400).json({ error: "We couldn't process your request, try again later!" });
 							}
 						}).catch((error) => {
-							return res.status(500).send(error);
+							return res.status(500).json({ error });
 						});
 					} else {
-						return res.status(404).send("Room not found!");
+						return res.status(404).json({ error: "Room not found!" });
 					}
 				}).catch((error) => {
-					return res.status(500).send(error);
+					return res.status(500).json({ error });
 				});
 			} else {
-				return res.status(404).send("Room not found!");
+				return res.status(404).json({ error: "Room not found!" });
 			}
 		}).catch((error) => {
-			return res.status(500).send(error);
+			return res.status(500).json({ error });
 		});
 	}
 
@@ -147,17 +147,17 @@ class UserRoomController {
 		const roomId = req.params.id;
 
 		if(!roomId || !roomId.length || !isValidObjectId(roomId)) {
-			return res.status(400).send("Invalid id!");
+			return res.status(400).json({ error: "Invalid id!" });
 		}
 
 		await UsersRoomsRepository.findByRoomId(roomId).then((response) => {
 			if(response) {
 				return res.status(200).json(response);
 			} else {
-				return res.status(404).send("User rooms not found!");
+				return res.status(404).json({ error: "User rooms not found!" });
 			}
 		}).catch((error) => {
-			return res.status(500).send(error);
+			return res.status(500).json({ error });
 		});
 	}
 
@@ -167,21 +167,21 @@ class UserRoomController {
 		const query = req.query.q?.toString();
 
 		if(!userId || !userId.length || !isValidObjectId(userId)) {
-			return res.status(400).send("Invalid id!");
+			return res.status(400).json({ error: "Invalid id!" });
 		}
 
 		if(!query || !query.length) {
-			return res.status(400).send("Invalid query!");
+			return res.status(400).json({ error: "Invalid query!" });
 		}
 
 		await UsersRoomsRepository.find(userId, query).then((response) => {
 			if(response) {
 				return res.status(200).json(response);
 			} else {
-				return res.status(404).send("Rooms not found!");
+				return res.status(404).json({ error: "Rooms not found!" });
 			}
 		}).catch((error) => {
-			return res.status(500).send(error);
+			return res.status(500).json({ error });
 		});
 	}
 
@@ -191,10 +191,10 @@ class UserRoomController {
 			if(response) {
 				return res.status(200).json(response);
 			} else {
-				return res.status(404).send("User rooms not found!");
+				return res.status(404).json({ error: "User rooms not found!" });
 			}
 		}).catch((error) => {
-			return res.status(500).send(error);
+			return res.status(500).json({ error });
 		});
 	}
 }
