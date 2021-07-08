@@ -100,16 +100,6 @@ class UserController {
 		const userId = req.body.user.id;
 		const filename = (req.file) ? req.file.filename : "";
 
-		if(filename) {
-			const mimeType = (req?.file?.mimetype) ? req?.file?.mimetype.split("/")[0] : null;
-
-			if(!mimeType || !mimeType.length || (mimeType !== "image")) {
-				return res.status(400).send("Invalid image type!");
-			}
-		} else {
-			return res.status(400).send("Invalid image!");
-		}
-
 		if(!userId || !userId.length || !isValidObjectId(userId)) {
 			return res.status(400).send("Invalid id!");
 		}
