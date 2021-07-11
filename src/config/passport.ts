@@ -9,7 +9,7 @@ export const passportJwt = new JWTStrategy({
 	jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
 	secretOrKey: SECRET
 }, async ({ userId }, done) => {
-	await UsersRepository.findById(userId).then((user) => {
+	return await UsersRepository.findById(userId).then((user) => {
 		if(user) {
 			return done(null, user);
 		} else {
