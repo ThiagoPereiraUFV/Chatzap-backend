@@ -14,7 +14,7 @@ import { roomUploads } from "../helpers/paths";
 class RoomController {
 	//	Return user rooms
 	async index(req: Request, res: Response) {
-		const userId = req.body.user.id;
+		const userId = req.body?.user?.id;
 
 		if(!userId || !userId.length || !isValidObjectId(userId)) {
 			return res.status(400).json({ error: "Invalid id!" });
@@ -33,7 +33,7 @@ class RoomController {
 
 	//	Create a new room
 	async create(req: Request, res: Response) {
-		const userId = req.body.user.id;
+		const userId = req.body?.user?.id;
 		const { name } = req.body;
 
 		if(!userId || !userId.length || !isValidObjectId(userId)) {
@@ -68,7 +68,7 @@ class RoomController {
 
 	//	Update room
 	async update(req: Request, res: Response) {
-		const userId = req.body.user.id;
+		const userId = req.body?.user?.id;
 		const roomId = req.params.id;
 		const { name } = req.body;
 
@@ -95,7 +95,7 @@ class RoomController {
 
 	//	Update room image
 	async updateImage(req: Request, res: Response) {
-		const userId = req.body.user.id;
+		const userId = req.body?.user?.id;
 		const roomId = req.params.id;
 		const filename = (req.file) ? req.file.filename : "";
 
@@ -143,7 +143,7 @@ class RoomController {
 
 	//	Remove room
 	async delete(req: Request, res: Response) {
-		const userId = req.body.user.id;
+		const userId = req.body?.user?.id;
 		const roomId = req.params.id;
 
 		if(!userId || !userId.length || !isValidObjectId(userId)) {
@@ -171,7 +171,7 @@ class RoomController {
 
 	//	Return a list of rooms containing a specific word
 	async search(req: Request, res: Response) {
-		const userId = req.body.user.id;
+		const userId = req.body?.user?.id;
 		const query = req.query.q?.toString();
 
 		if(!userId || !userId.length || !isValidObjectId(userId)) {

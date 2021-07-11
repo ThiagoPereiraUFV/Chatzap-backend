@@ -53,7 +53,7 @@ class UserController {
 
 	//	Update user
 	async update(req: Request, res: Response) {
-		const userId = req.body.user.id;
+		const userId = req.body?.user?.id;
 		const { name, phone, email, passwordO, passwordN } = req.body;
 
 		await UsersRepository.findByPhone(phone).then((response) => {
@@ -97,7 +97,7 @@ class UserController {
 
 	//	Update user image
 	async updateImage(req: Request, res: Response) {
-		const userId = req.body.user.id;
+		const userId = req.body?.user?.id;
 		const filename = (req.file) ? req.file.filename : "";
 
 		if(!userId || !userId.length || !isValidObjectId(userId)) {
@@ -141,7 +141,7 @@ class UserController {
 	//	Remove user
 	async delete(req: Request, res: Response) {
 		const password = req.body.password?.toString();
-		const userId = req.body.user.id;
+		const userId = req.body?.user?.id;
 
 		if(!userId || !userId.length || !isValidObjectId(userId)) {
 			return res.status(400).json({ error: "Invalid id!" });
