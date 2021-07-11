@@ -1,4 +1,4 @@
-//  Importing express, mongoose, JWT resources and env
+//  Importing express, JWT and env resources
 import { Request, Response } from "express";
 import { sign } from "jsonwebtoken";
 import { SECRET } from "../config/env";
@@ -26,13 +26,13 @@ class SessionController {
 
 					return res.status(201).json({ user, token });
 				} else {
-					return res.status(400).send("Wrong user or password, try again!");
+					return res.status(400).json({ error: "Wrong user or password, try again!" });
 				}
 			} else {
-				return res.status(404).send("Wrong user or password, try again!");
+				return res.status(404).json({ error: "Wrong user or password, try again!" });
 			}
 		}).catch((error) => {
-			return res.status(500).send(error);
+			return res.status(500).json({ error });
 		});
 	}
 }

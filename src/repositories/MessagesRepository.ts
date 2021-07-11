@@ -1,3 +1,4 @@
+//  Importing Message model
 import messages from "../models/Message";
 
 class MessagesRepository {

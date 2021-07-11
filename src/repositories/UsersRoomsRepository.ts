@@ -1,3 +1,4 @@
+//  Importing UserRoom model
 import usersRooms from "../models/UserRoom";
 
 class UsersRoomsRepository {

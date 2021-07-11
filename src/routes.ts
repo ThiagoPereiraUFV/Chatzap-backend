@@ -7,12 +7,12 @@ import UserController from "./controllers/UserController";
 import RoomController from "./controllers/RoomController";
 import UserRoomController from "./controllers/UserRoomController";
 
-//	Importing helpers and settings
-import { userUpload, roomUpload } from "./config/uploads";
-import { authJWT } from "./helpers/auth";
+//	Importing helpers and middlewares
+import { userUpload, roomUpload } from "./middlewares/upload";
+import { authJWT } from "./middlewares/auth";
 import { schemas, validateBody } from "./helpers/validate";
 
-//  Setting up routes
+//  Setting up router
 const routes = Router();
 
 //	Home page

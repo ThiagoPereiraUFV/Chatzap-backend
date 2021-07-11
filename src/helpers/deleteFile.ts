@@ -1,3 +1,4 @@
+//	Importing fs resources
 import fs from "fs";
 
 export function deleteFile(filepath: string): void {

@@ -1,8 +1,8 @@
-//  Importing express, mongoose and JWT resources
+//  Importing express and mongoose resources
 import { Request, Response } from "express";
 import { isValidObjectId } from "mongoose";
 
-//	Importing Rooms repository
+//	Importing repositories
 import RoomsRepository from "../repositories/RoomsRepository";
 import UsersRoomsRepository from "../repositories/UsersRoomsRepository";
 
@@ -14,30 +14,30 @@ import { roomUploads } from "../helpers/paths";
 class RoomController {
 	//	Return user rooms
 	async index(req: Request, res: Response) {
-		const userId = req.body.user.id;
+		const userId = req.body?.user?.id;
 
 		if(!userId || !userId.length || !isValidObjectId(userId)) {
-			return res.status(400).send("Invalid id!");
+			return res.status(400).json({ error: "Invalid id!" });
 		}
 
 		await RoomsRepository.allFromUser(userId).then((response) => {
 			if(response) {
 				return res.status(200).json(response);
 			} else {
-				return res.status(404).send("Rooms not found!");
+				return res.status(404).json({ error: "Rooms not found!" });
 			}
 		}).catch((error) => {
-			return res.status(500).send(error);
+			return res.status(500).json({ error });
 		});
 	}
 
 	//	Create a new room
 	async create(req: Request, res: Response) {
-		const userId = req.body.user.id;
+		const userId = req.body?.user?.id;
 		const { name } = req.body;
 
 		if(!userId || !userId.length || !isValidObjectId(userId)) {
-			return res.status(400).send("Invalid id!");
+			return res.status(400).json({ error: "Invalid id!" });
 		}
 
 		await RoomsRepository.create({
@@ -53,68 +53,58 @@ class RoomController {
 					if(userRoom) {
 						return res.status(201).json(room);
 					} else {
-						return res.status(400).send("We couldn't process your request, try again later!");
+						return res.status(400).json({ error: "We couldn't process your request, try again later!" });
 					}
 				}).catch((error) => {
-					return res.status(500).send(error);
+					return res.status(500).json({ error });
 				});
 			} else {
-				return res.status(400).send("We couldn't process your request, try again later!");
+				return res.status(400).json({ error: "We couldn't process your request, try again later!" });
 			}
 		}).catch((error) => {
-			return res.status(500).send(error);
+			return res.status(500).json({ error });
 		});
 	}
 
 	//	Update room
 	async update(req: Request, res: Response) {
-		const userId = req.body.user.id;
+		const userId = req.body?.user?.id;
 		const roomId = req.params.id;
 		const { name } = req.body;
 
 		if(!userId || !userId.length || !isValidObjectId(userId)) {
-			return res.status(400).send("Invalid id!");
+			return res.status(400).json({ error: "Invalid id!" });
 		}
 
 		if(!roomId || !roomId.length || !isValidObjectId(roomId)) {
-			return res.status(400).send("Invalid id!");
+			return res.status(400).json({ error: "Invalid id!" });
 		}
 
 		await RoomsRepository.update(roomId, userId, {
 			name: name.trim()
 		}).then((response) => {
 			if(response) {
-				return res.status(200).send("Room data has been updated!");
+				return res.status(200).json(response);
 			} else {
-				return res.status(404).send("Room not found!");
+				return res.status(404).json({ error: "Room not found!" });
 			}
 		}).catch((error) => {
-			return res.status(500).send(error);
+			return res.status(500).json({ error });
 		});
 	}
 
 	//	Update room image
 	async updateImage(req: Request, res: Response) {
-		const userId = req.body.user.id;
+		const userId = req.body?.user?.id;
 		const roomId = req.params.id;
 		const filename = (req.file) ? req.file.filename : "";
 
-		if(filename) {
-			const mimeType = (req?.file?.mimetype) ? req?.file?.mimetype.split("/")[0] : null;
-
-			if(!mimeType || !mimeType.length || (mimeType !== "image")) {
-				return res.status(400).send("Invalid image type!");
-			}
-		} else {
-			return res.status(400).send("Invalid image!");
-		}
-
 		if(!userId || !userId.length || !isValidObjectId(userId)) {
-			return res.status(400).send("Invalid id!");
+			return res.status(400).json({ error: "Invalid id!" });
 		}
 
 		if(!roomId || !roomId.length || !isValidObjectId(roomId)) {
-			return res.status(400).send("Invalid id!");
+			return res.status(400).json({ error: "Invalid id!" });
 		}
 
 		await RoomsRepository.findByIds(roomId, userId).then((room) => {
@@ -132,36 +122,36 @@ class RoomController {
 					} else {
 						deleteFile(roomUploads(filename));
 
-						return res.status(400).send("Image could not be updated");
+						return res.status(400).json({ error: "Image could not be updated" });
 					}
 				}).catch((error) => {
 					deleteFile(roomUploads(filename));
 
-					return res.status(500).send(error);
+					return res.status(500).json({ error });
 				});
 			} else {
 				deleteFile(roomUploads(filename));
 
-				return res.status(404).send("Room not found!");
+				return res.status(404).json({ error: "Room not found!"});
 			}
 		}).catch((error) => {
 			deleteFile(roomUploads(filename));
 
-			return res.status(500).send(error);
+			return res.status(500).json({ error });
 		});
 	}
 
 	//	Remove room
 	async delete(req: Request, res: Response) {
-		const userId = req.body.user.id;
+		const userId = req.body?.user?.id;
 		const roomId = req.params.id;
 
 		if(!userId || !userId.length || !isValidObjectId(userId)) {
-			return res.status(400).send("Invalid id!");
+			return res.status(400).json({ error: "Invalid id!" });
 		}
 
 		if(!roomId || !roomId.length || !isValidObjectId(roomId)) {
-			return res.status(400).send("Invalid id!");
+			return res.status(400).json({ error: "Invalid id!" });
 		}
 
 		await RoomsRepository.delete(roomId, userId).then((room) => {
@@ -170,36 +160,36 @@ class RoomController {
 					deleteFile(roomUploads(room.image));
 				}
 
-				return res.status(200).send("The room has been deleted!");
+				return res.status(200).json(room);
 			} else {
-				return res.status(404).send("Room not found!");
+				return res.status(404).json({ error: "Room not found!" });
 			}
 		}).catch((error) => {
-			return res.status(500).send(error);
+			return res.status(500).json({ error });
 		});
 	}
 
 	//	Return a list of rooms containing a specific word
 	async search(req: Request, res: Response) {
-		const userId = req.body.user.id;
+		const userId = req.body?.user?.id;
 		const query = req.query.q?.toString();
 
 		if(!userId || !userId.length || !isValidObjectId(userId)) {
-			return res.status(400).send("Invalid id!");
+			return res.status(400).json({ error: "Invalid id!" });
 		}
 
 		if(!query || !query.length) {
-			return res.status(400).send("Invalid query!");
+			return res.status(400).json({ error: "Invalid query!" });
 		}
 
 		await RoomsRepository.find(userId, query).then((response) => {
 			if(response) {
 				return res.status(200).json(response);
 			} else {
-				return res.status(404).send("Rooms not found!");
+				return res.status(404).json({ error: "Rooms not found!" });
 			}
 		}).catch((error) => {
-			return res.status(500).send(error);
+			return res.status(500).json({ error });
 		});
 	}
 
@@ -209,10 +199,10 @@ class RoomController {
 			if(response) {
 				return res.status(200).json(response);
 			} else {
-				return res.status(404).send("Rooms not found!");
+				return res.status(404).json({ error: "Rooms not found!" });
 			}
 		}).catch((error) => {
-			return res.status(500).send(error);
+			return res.status(500).json({ error });
 		});
 	}
 }

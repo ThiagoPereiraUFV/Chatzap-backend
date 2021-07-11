@@ -1,3 +1,4 @@
+//  Importing User model
 import users from "../models/User";
 
 class UsersRepository {

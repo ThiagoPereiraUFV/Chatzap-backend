@@ -1,3 +1,4 @@
+//  Importing Room model
 import rooms from "../models/Room";
 
 class RoomsRepository {
