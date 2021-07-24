@@ -5,6 +5,7 @@ class UsersRoomsRepository {
 	public async findById(id: string) {
 		return await usersRooms.findById(id).populate("roomId");
 	}
+
 	public async findByIds(userId: string, roomId: string) {
 		return await usersRooms.findOne({ userId, roomId }).populate({
 			path: "roomId",
