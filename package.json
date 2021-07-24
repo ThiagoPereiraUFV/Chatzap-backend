@@ -8,7 +8,7 @@
   "license": "MIT",
   "scripts": {
     "start": "ts-node --transpile-only ./src/index.ts",
-    "dev": "NODE_ENV=dev ts-node-dev --ignore-watch node_modules ./src/index.ts",
+    "dev": "NODE_ENV=dev ts-node-dev --trace-warnings --ignore-watch node_modules ./src/index.ts",
     "test": "NODE_ENV=test SECRET=secrettest jest --testTimeout=30000",
     "patch": "yarn version --patch && git push --follow-tags",
     "release": "yarn version --major && git push --follow-tags"
