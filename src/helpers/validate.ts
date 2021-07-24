@@ -34,16 +34,16 @@ export const schemas = {
 	createUserSchema: object().keys({
 		name: Joi.string().required(),
 		phone: Joi.string().required(),
-		email: Joi.string().email(),
+		email: Joi.string().email().allow("").optional(),
 		password: Joi.string().required(),
 		passwordC: Joi.ref("password")
 	}),
 	updateUserSchema: object().keys({
 		name: Joi.string().required(),
 		phone: Joi.string().required(),
-		email: Joi.string().email(),
-		passwordO: Joi.string(),
-		passwordN: Joi.string(),
+		email: Joi.string().email().allow("").optional(),
+		passwordO: Joi.string().allow("").optional(),
+		passwordN: Joi.string().allow("").optional(),
 		user: Joi.object().required()
 	}),
 	deleteUserSchema: object().keys({
