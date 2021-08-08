@@ -1,0 +1,52 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/user-rooms",
+      "handler": "user-room.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/user-rooms/count",
+      "handler": "user-room.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/user-rooms/:id",
+      "handler": "user-room.findOne",
+      "config": {
+        "policies": ["userBelongsToChat"]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/user-rooms",
+      "handler": "user-room.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/user-rooms/:id",
+      "handler": "user-room.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/user-rooms/:id",
+      "handler": "user-room.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

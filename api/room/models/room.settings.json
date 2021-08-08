@@ -1,0 +1,44 @@
+{
+  "kind": "collectionType",
+  "collectionName": "rooms",
+  "info": {
+    "name": "Room",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "minLength": 1
+    },
+    "image": {
+      "model": "file",
+      "via": "related",
+      "allowedTypes": [
+        "images"
+      ],
+      "plugin": "upload",
+      "required": false,
+      "pluginOptions": {}
+    },
+    "owner": {
+      "via": "rooms",
+      "plugin": "users-permissions",
+      "model": "user"
+    },
+    "user_rooms": {
+      "via": "room",
+      "collection": "user-room"
+    },
+    "messages": {
+      "via": "room",
+      "collection": "message"
+    }
+  }
+}

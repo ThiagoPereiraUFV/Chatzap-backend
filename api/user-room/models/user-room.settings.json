@@ -1,0 +1,25 @@
+{
+  "kind": "collectionType",
+  "collectionName": "user_rooms",
+  "info": {
+    "name": "UserRoom",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "user": {
+      "via": "user_rooms",
+      "plugin": "users-permissions",
+      "model": "user"
+    },
+    "room": {
+      "model": "room",
+      "via": "user_rooms"
+    }
+  }
+}

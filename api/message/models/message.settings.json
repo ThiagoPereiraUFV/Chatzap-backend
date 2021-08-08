@@ -1,0 +1,29 @@
+{
+  "kind": "collectionType",
+  "collectionName": "messages",
+  "info": {
+    "name": "Message",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "text": {
+      "type": "text",
+      "required": true,
+      "minLength": 1
+    },
+    "user": {
+      "plugin": "users-permissions",
+      "model": "user"
+    },
+    "room": {
+      "model": "room",
+      "via": "messages"
+    }
+  }
+}
