@@ -1,7 +1,7 @@
 {
   "name": "chatzap-backend",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "System to chat with friends",
   "repository": "https://github.com/ThiagoPereiraUFV/Chatzap-backend.git",
   "author": "Thiago Marinho Pereira",
